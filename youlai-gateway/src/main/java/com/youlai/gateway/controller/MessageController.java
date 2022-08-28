@@ -1,6 +1,7 @@
 package com.youlai.gateway.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
@@ -11,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 
 /**
- * 测试控制器
+ * 消息测试控制器
  *
  * @author haoxr
  * @date 2022/8/28
@@ -20,7 +21,9 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class MessageController {
 	private final WebClient webClient;
-	private final String messagesBaseUri;
+
+	@Value("${messages.base-uri}")
+	private  String messagesBaseUri;
 
 	@GetMapping("/")
 	public Mono<String> messages(@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code") OAuth2AuthorizedClient authorizedClient) {
@@ -32,5 +35,4 @@ public class MessageController {
 				.bodyToMono(String.class);
 		return stringMono;
 	}
-
 }
