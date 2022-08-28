@@ -1,0 +1,36 @@
+server:
+  port: 8800
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:9000
+  cloud:
+    nacos:
+      # 注册中心
+      discovery:
+        server-addr: http://localhost:8848
+        namespace: cloud-namespace-id
+      # 配置中心
+      config:
+        server-addr: http://localhost:8848
+        namespace: cloud-namespace-id
+        file-extension: yaml
+        shared-configs[0]:
+          data-id: youlai-common.yaml
+          namespace: cloud-namespace-id
+          refresh: true
+
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
+#    org.springframework.boot.autoconfigure: DEBUG

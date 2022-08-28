@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: youlai-gateway
+  profiles:
+    active: dev

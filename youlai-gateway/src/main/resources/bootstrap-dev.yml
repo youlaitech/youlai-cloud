@@ -1,0 +1,51 @@
+server:
+  port: 9999
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  cloud:
+    nacos:
+      # 注册中心
+      discovery:
+        server-addr: http://localhost:8848
+        namespace: cloud-namespace-id
+      # 配置中心
+      config:
+        server-addr: http://localhost:8848
+        namespace: cloud-namespace-id
+        file-extension: yaml
+        shared-configs[0]:
+          data-id: youlai-common.yaml
+          namespace: cloud-namespace-id
+          refresh: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          messaging-client-authorization-code:
+            provider: spring
+            client-id: messaging-client
+            client-secret: secret
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+            # {baseUrl}/login/oauth2/code/{registrationId}
+            #"http://127.0.0.1:9999/login/oauth2/code/messaging-client-authorization-code"
+            redirect-uri: "http://127.0.0.1:9999/login/oauth2/code/messaging-client-authorization-code"
+            scope: openid,message.read,message.write
+        provider:
+          spring:
+            issuer-uri: http://127.0.0.1:9000
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
+#    org.springframework.boot.autoconfigure: DEBUG
+
+messages:
+  base-uri: http://127.0.0.1:8800/messages

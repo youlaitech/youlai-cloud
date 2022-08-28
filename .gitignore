@@ -1,0 +1,39 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example SysUserDetails template template
+### Example SysUserDetails template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+target
+*.log
+
+# Nacos
+!**/nacos/target
+**/nacos/bin/work
+**/nacos/data
+logs
+**/nacos/LICENSE
+**/nacos/NOTICE
+
+# Canal
+h2.mv.db
+**/meta.dat
+
+# https://raw.githubusercontent.com/redhat-developer/vscode-java/master/.gitignore
+# vscode
+server
+node_modules
+*.vsix
+.DS_Store
+.vscode-test
+undefined
+dist
+jre
+.settings
+.classpath
+.project
+test/resources/projects/**/.vscode
+test/resources/projects/maven/salut/testGradle
