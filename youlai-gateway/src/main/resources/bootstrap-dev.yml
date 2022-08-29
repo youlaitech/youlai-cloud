@@ -43,9 +43,6 @@ logging:
   level:
     root: INFO
     org.springframework.web: INFO
-    org.springframework.security: TRACE
-    org.springframework.security.oauth2: TRACE
-#    org.springframework.boot.autoconfigure: DEBUG
-
-messages:
-  base-uri: http://127.0.0.1:8800/messages
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    #org.springframework.boot.autoconfigure: DEBUG

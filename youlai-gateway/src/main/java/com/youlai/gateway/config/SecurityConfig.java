@@ -1,6 +1,5 @@
 package com.youlai.gateway.config;
 
-import com.youlai.gateway.filter.UserInfoRelayGatewayFilterFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
