@@ -1,6 +1,7 @@
 package com.youlai.gateway.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -8,7 +9,10 @@ import org.springframework.security.oauth2.client.web.reactive.function.client.S
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 
 /**
@@ -19,6 +23,7 @@ import reactor.core.publisher.Mono;
  */
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MessageController {
 	private final WebClient webClient;
 
@@ -26,7 +31,13 @@ public class MessageController {
 	private  String messagesBaseUri;
 
 	@GetMapping("/")
-	public Mono<String> messages(@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code") OAuth2AuthorizedClient authorizedClient) {
+	public Mono<String> messages(
+			ServerWebExchange exchange,
+			@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code") OAuth2AuthorizedClient authorizedClient) {
+
+		String authorization = exchange.getRequest().getHeaders().getFirst("Authorization");
+		log.info("authorization:{}",authorization);
+
 		Mono<String> stringMono = this.webClient
 				.get()
 				.uri(messagesBaseUri)
