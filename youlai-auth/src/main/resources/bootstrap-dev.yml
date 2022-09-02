@@ -1,5 +1,13 @@
 server:
   port: 9000
+  servlet:
+    # 设置session cookie相关
+    session:
+      cookie:
+        # 设置session Cookie名称
+        name: AUTH_SESSION_ID
+        # http-only（禁止JS读取cookie）
+        http-only: true
 
 spring:
   mvc:
@@ -25,6 +33,18 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://127.0.0.1:9000
+  session:
+    # Spring Session超时时间(单位秒，默认1800s)
+    timeout: 1800
+    # Spring Session持久化类型
+    store-type: redis
+    # Spring Session Redis配置
+    redis:
+      cleanup-cron: 0 * * * * *
+      namespace: spring:session
+      save-mode: on-set-attribute
+      flush-mode: on_save
+      configure-action: notify_keyspace_events
 
 logging:
   level:

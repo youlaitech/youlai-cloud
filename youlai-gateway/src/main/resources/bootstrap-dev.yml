@@ -1,5 +1,13 @@
 server:
   port: 9999
+  reactive:
+    session:
+      cookie:
+        name: GATEWAY_SESSION_ID
+        # 禁止JS读取cookie
+        http-only: true
+        secure: true
+        same-site: none
 
 spring:
   mvc:
@@ -38,6 +46,18 @@ spring:
         provider:
           spring:
             issuer-uri: http://127.0.0.1:9000
+  session:
+    # Spring Session超时时间(单位秒，默认1800s)
+    timeout: 1800
+    # Spring Session持久化类型
+    store-type: redis
+    # Spring Session Redis配置
+    redis:
+      cleanup-cron: 0 * * * * *
+      namespace: spring:session
+      save-mode: on-set-attribute
+      flush-mode: on_save
+      configure-action: notify_keyspace_events
 
 logging:
   level:

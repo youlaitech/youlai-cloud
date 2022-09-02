@@ -16,6 +16,7 @@
         <module>common-redis</module>
         <module>common-web</module>
         <module>common-log</module>
+        <module>common-mybatis</module>
     </modules>
 
     <properties>
