@@ -71,7 +71,7 @@ public class AuthorizationServerConfig {
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                     .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                    .redirectUri("http://127.0.0.1:9999/login/oauth2/code/messaging-client-authorization-code")
+                    .redirectUri("http://127.0.0.1:9999/login/oauth2/code/gateway-client-authorization-code")
                     .redirectUri("http://127.0.0.1:9999/authorized")
                     .scope(OidcScopes.OPENID)
                     .scope(OidcScopes.PROFILE)

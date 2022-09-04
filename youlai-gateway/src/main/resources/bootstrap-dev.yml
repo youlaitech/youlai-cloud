@@ -33,15 +33,15 @@ spring:
     oauth2:
       client:
         registration:
-          messaging-client-authorization-code:
+          gateway-client-authorization-code:
             provider: spring
             client-id: messaging-client
             client-secret: secret
             client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
             # {baseUrl}/login/oauth2/code/{registrationId}
-            #"http://127.0.0.1:9999/login/oauth2/code/messaging-client-authorization-code"
-            redirect-uri: "http://127.0.0.1:9999/login/oauth2/code/messaging-client-authorization-code"
+            #"http://127.0.0.1:9999/login/oauth2/code/gateway-client-authorization-code"
+            redirect-uri: "http://127.0.0.1:9999/login/oauth2/code/gateway-client-authorization-code"
             scope: openid,message.read,message.write
         provider:
           spring:
