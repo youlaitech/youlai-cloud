@@ -61,12 +61,12 @@ public class AuthorizationServerConfig {
 
         // Save registered client in db as if in-memory
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
-        RegisteredClient client = registeredClientRepository.findByClientId("messaging-client");
+        RegisteredClient client = registeredClientRepository.findByClientId("gateway-client");
 
         if (client == null) {
             RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                    .clientId("messaging-client")
-                    .clientSecret("{noop}secret                         ")
+                    .clientId("gateway-client")
+                    .clientSecret("{noop}secret")
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)

@@ -35,7 +35,7 @@ spring:
         registration:
           gateway-client-authorization-code:
             provider: spring
-            client-id: messaging-client
+            client-id: gateway-client
             client-secret: secret
             client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
