@@ -16,4 +16,36 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+
+    <dependencies>
+        <dependency>
+            <groupId>com.youlai</groupId>
+            <artifactId>common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.youlai</groupId>
+            <artifactId>common-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Api文档 -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-micro-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- openfeign依赖  -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+    </dependencies>
+
 </project>
