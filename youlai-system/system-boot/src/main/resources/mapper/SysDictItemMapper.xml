@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youlai.admin.mapper.SysDictItemMapper">
+
+    <select id="list" resultType="com.youlai.system.pojo.entity.SysDict" >
+        SELECT
+            a.*,
+            b.name as dict_name
+        FROM
+            sys_dict_item a
+                LEFT JOIN sys_dict b ON a.dict_code=b.code
+        <where>
+            <if test='dictItem.name != null and dictItem.name.trim() neq ""'>
+                AND a.name like concat('%',#{dictItem.name},'%')
+            </if>
+            <if test='dictItem.dictCode !=null and dictItem.dictCode.trim() neq ""'>
+                AND a.dict_code = #{dictItem.dictCode}
+            </if>
+        </where>
+    </select>
+</mapper>

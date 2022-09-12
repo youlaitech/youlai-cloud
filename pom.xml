@@ -12,7 +12,7 @@
         <module>youlai-gateway</module>
         <module>youlai-auth</module>
         <module>youlai-common</module>
-        <module>youlai-admin</module>
+        <module>youlai-system</module>
     </modules>
 
     <parent>
@@ -261,7 +261,7 @@
 
             <dependency>
                 <groupId>com.youlai</groupId>
-                <artifactId>admin-api</artifactId>
+                <artifactId>system-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -304,7 +304,7 @@
 
             <dependency>
                 <groupId>com.youlai</groupId>
-                <artifactId>admin-api</artifactId>
+                <artifactId>system-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

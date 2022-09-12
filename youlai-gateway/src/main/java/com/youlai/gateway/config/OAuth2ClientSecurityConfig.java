@@ -72,7 +72,8 @@ public class OAuth2ClientSecurityConfig {
                 .authenticationEntryPoint(authenticationEntryPoint()) // 未认证响应处理
                 .and()
                 .oauth2Login(oAuth2LoginSpec ->
-                        oAuth2LoginSpec.authenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(authenticationEntryPoint()))
+                        oAuth2LoginSpec
+                                .authenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(authenticationEntryPoint()))
                                 .authorizationRequestResolver(customServerOAuth2AuthorizationRequestResolver)
                 )
                 .oauth2Client(Customizer.withDefaults());
@@ -86,7 +87,6 @@ public class OAuth2ClientSecurityConfig {
     ServerAuthenticationEntryPoint authenticationEntryPoint() {
         MediaTypeServerWebExchangeMatcher applicationJsonMatcher = new MediaTypeServerWebExchangeMatcher(MediaType.APPLICATION_JSON);
         applicationJsonMatcher.setIgnoredMediaTypes(Stream.of(MediaType.ALL).collect(Collectors.toSet()));
-
 
         List<DelegatingServerAuthenticationEntryPoint.DelegateEntry> delegateEntryList = Arrays.asList(
                 //请求头accept为application/json -> 返回401
@@ -115,7 +115,7 @@ public class OAuth2ClientSecurityConfig {
 
         DelegatingServerAuthenticationEntryPoint nonAjaxLoginEntryPoint = new DelegatingServerAuthenticationEntryPoint(delegateEntryList);
         // 默认登录入口即为OAuth2重定向登录端点
-        nonAjaxLoginEntryPoint.setDefaultEntryPoint(new RedirectServerAuthenticationEntryPoint("/oauth2/authorization/gateway-client-authorization-code"));
+        nonAjaxLoginEntryPoint.setDefaultEntryPoint(new RedirectServerAuthenticationEntryPoint("http://localhost:3000/#/dashboard"));
         return nonAjaxLoginEntryPoint;
     }
 

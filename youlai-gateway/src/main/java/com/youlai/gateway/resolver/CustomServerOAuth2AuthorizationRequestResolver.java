@@ -33,7 +33,7 @@ public class CustomServerOAuth2AuthorizationRequestResolver extends DefaultServe
                             .ifPresent(redirectUri -> {
                                 exchange.getSession().subscribe(webSession -> {
                                     webSession.getAttributes().put("SPRING_SECURITY_SAVED_REQUEST", redirectUri);
-                                    log.debug("SCG OAuth2 authorization endpoint queryParam redirect_uri added to WebSession,{}", redirectUri);
+                                    log.info("SCG OAuth2 authorization endpoint queryParam redirect_uri added to WebSession,{}", redirectUri);
                                 });
                             });
                 });

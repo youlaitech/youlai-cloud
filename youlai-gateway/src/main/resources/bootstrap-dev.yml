@@ -3,9 +3,9 @@ server:
   reactive:
     session:
       cookie:
-        name: GATEWAY_SESSION_ID
+        name: SCG_SESSION_ID
         # 禁止JS读取cookie
-        http-only: true
+        http-only: false
         secure: true
         same-site: none
 
