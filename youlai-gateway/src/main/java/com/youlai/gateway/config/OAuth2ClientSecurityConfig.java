@@ -1,17 +1,20 @@
 package com.youlai.gateway.config;
 
 import cn.hutool.core.convert.Convert;
+import com.youlai.gateway.resolver.SveRequestServerOAuth2AuthorizationRequestResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.server.DelegatingServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -40,17 +43,17 @@ import java.util.stream.Stream;
 @ConfigurationProperties(prefix = "security")
 @EnableWebFluxSecurity
 @Slf4j
-@RequiredArgsConstructor
 public class OAuth2ClientSecurityConfig {
 
     @Setter
     private List<String> ignoreUrls;
 
 
-    final ServerOAuth2AuthorizationRequestResolver customServerOAuth2AuthorizationRequestResolver;
-
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http
+                                                            ,
+                                                            ServerOAuth2AuthorizationRequestResolver serverOAuth2AuthorizationRequestResolver
+    ) {
         if (ignoreUrls == null) {
             log.error("failed to read ignoreUrls configuration,please check your nacos connection or configuration!");
         }
@@ -74,7 +77,7 @@ public class OAuth2ClientSecurityConfig {
                 .oauth2Login(oAuth2LoginSpec ->
                         oAuth2LoginSpec
                                 .authenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(authenticationEntryPoint()))
-                                .authorizationRequestResolver(customServerOAuth2AuthorizationRequestResolver)
+                                .authorizationRequestResolver(serverOAuth2AuthorizationRequestResolver)
                 )
                 .oauth2Client(Customizer.withDefaults());
         return http.build();
@@ -115,9 +118,22 @@ public class OAuth2ClientSecurityConfig {
 
         DelegatingServerAuthenticationEntryPoint nonAjaxLoginEntryPoint = new DelegatingServerAuthenticationEntryPoint(delegateEntryList);
         // 默认登录入口即为OAuth2重定向登录端点
-        nonAjaxLoginEntryPoint.setDefaultEntryPoint(new RedirectServerAuthenticationEntryPoint("http://localhost:3000/#/dashboard"));
+        nonAjaxLoginEntryPoint.setDefaultEntryPoint(new RedirectServerAuthenticationEntryPoint("/oauth2/authorization/gateway-client-authorization-code"));
         return nonAjaxLoginEntryPoint;
     }
+
+
+    /**
+     * OAuth2 Client Authorization Endpoint /oauth2/authoriztion/{clientRegId} <br/>
+     * 请求解析器扩展实现 - 支持提取query参数redirect_uri，用作后续OAuth2认证完成后SCG重定向到该指定redirect_uri。<br/>
+     * 适用场景：SPA -> SCG -> SCG返回401 -> SPA重定向到/oauth2/authorization/{clientRegId}?redirect_uri=http://spa -> SCG完成OAuth2认证后再重定向回http://spa
+     */
+    @Bean
+    @Primary
+    public ServerOAuth2AuthorizationRequestResolver saveRequestServerOAuth2AuthorizationRequestResolver(ReactiveClientRegistrationRepository clientRegistrationRepository) {
+        return new SveRequestServerOAuth2AuthorizationRequestResolver(clientRegistrationRepository);
+    }
+
 
 
 }

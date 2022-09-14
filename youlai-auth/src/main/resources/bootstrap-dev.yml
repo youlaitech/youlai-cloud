@@ -42,7 +42,7 @@ spring:
     redis:
       cleanup-cron: 0 * * * * *
       namespace: spring:session
-      save-mode: on-set-attribute
+      save-mode: on_set_attribute
       flush-mode: on_save
       configure-action: notify_keyspace_events
 
@@ -51,5 +51,5 @@ logging:
     root: INFO
     org.springframework.web: INFO
     org.springframework.security: TRACE
-    org.springframework.security.oauth2: DEBUG
+    org.springframework.security.oauth2: TRACE
 #    org.springframework.boot.autoconfigure: DEBUG

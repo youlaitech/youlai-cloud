@@ -41,7 +41,7 @@ spring:
             authorization-grant-type: authorization_code
             # {baseUrl}/login/oauth2/code/{registrationId}
             #"http://127.0.0.1:9999/login/oauth2/code/gateway-client-authorization-code"
-            redirect-uri: "http://127.0.0.1:9999/login/oauth2/code/gateway-client-authorization-code"
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: openid,message.read,message.write
         provider:
           spring:
@@ -55,7 +55,7 @@ spring:
     redis:
       cleanup-cron: 0 * * * * *
       namespace: spring:session
-      save-mode: on-set-attribute
+      save-mode: on_set_attribute
       flush-mode: on_save
       configure-action: notify_keyspace_events
 
@@ -63,6 +63,6 @@ logging:
   level:
     root: INFO
     org.springframework.web: INFO
-    org.springframework.security: DEBUG
-    org.springframework.security.oauth2: DEBUG
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
     #org.springframework.boot.autoconfigure: DEBUG

@@ -14,9 +14,9 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-public class CustomServerOAuth2AuthorizationRequestResolver extends DefaultServerOAuth2AuthorizationRequestResolver {
+public class SveRequestServerOAuth2AuthorizationRequestResolver extends DefaultServerOAuth2AuthorizationRequestResolver {
 
-    public CustomServerOAuth2AuthorizationRequestResolver(ReactiveClientRegistrationRepository clientRegistrationRepository) {
+    public SveRequestServerOAuth2AuthorizationRequestResolver(ReactiveClientRegistrationRepository clientRegistrationRepository) {
         super(clientRegistrationRepository);
     }
 
