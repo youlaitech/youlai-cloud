@@ -34,6 +34,7 @@ import com.youlai.common.base.IBaseEnum;
 import com.youlai.common.constant.SystemConstants;
 import com.youlai.common.enums.GenderEnum;
 import com.youlai.common.web.util.UserUtils;
+import com.youlai.system.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -109,7 +111,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         String username = userForm.getUsername();
 
-        int count = this.count(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, username));
+        long count = this.count(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, username));
         Assert.isTrue(count == 0, "用户名已存在");
 
         // 实体转换 form->entity
@@ -142,7 +144,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         String username = userForm.getUsername();
 
-        int count = this.count(new LambdaQueryWrapper<SysUser>()
+        long count = this.count(new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getUsername, username)
                 .ne(SysUser::getId,userId)
         );
@@ -319,7 +321,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public LoginUserVO getLoginUserInfo() {
         // 登录用户entity
         SysUser user = this.getOne(new LambdaQueryWrapper<SysUser>()
-                .eq(SysUser::getId, UserUtils.getUserId())
+                .eq(SysUser::getUsername, SecurityUtils.getUsername())
                 .select(
                         SysUser::getId,
                         SysUser::getNickname,
@@ -330,7 +332,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         LoginUserVO loginUserVO = userConverter.entity2LoginUser(user);
 
         // 用户角色集合
-        List<String> roles = UserUtils.getRoles();
+        Set<String> roles = SecurityUtils.getAuthorities();
         loginUserVO.setRoles(roles);
 
         return loginUserVO;

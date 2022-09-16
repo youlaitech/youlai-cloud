@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 登录用户视图层对象
@@ -26,7 +27,7 @@ public class LoginUserVO {
     private String avatar;
 
     @ApiModelProperty("用户的角色编码集合")
-    private List<String> roles;
+    private Set<String> roles;
 
     @ApiModelProperty("用户的按钮权限标识集合")
     private List<String> perms;

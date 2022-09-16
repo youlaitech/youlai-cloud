@@ -103,7 +103,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         Long roleId = roleForm.getId();
         String roleCode = roleForm.getCode();
 
-        int count = this.count(new LambdaQueryWrapper<SysRole>()
+        long count = this.count(new LambdaQueryWrapper<SysRole>()
                 .ne(roleId != null, SysRole::getId, roleId)
                 .and(wrapper ->
                         wrapper.eq(SysRole::getCode, roleCode).or().eq(SysRole::getName, roleCode)
@@ -144,7 +144,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         Optional.ofNullable(roleIds)
                 .orElse(new ArrayList<>())
                 .forEach(id -> {
-                    int count = sysUserRoleService.count(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getRoleId, id));
+                    long count = sysUserRoleService.count(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getRoleId, id));
                     Assert.isTrue(count <= 0, "该角色已分配用户，无法删除");
                     sysRoleMenuService.remove(new LambdaQueryWrapper<SysRoleMenu>().eq(SysRoleMenu::getRoleId, id));
                 });

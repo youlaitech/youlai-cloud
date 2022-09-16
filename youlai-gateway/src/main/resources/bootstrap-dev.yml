@@ -3,7 +3,7 @@ server:
   reactive:
     session:
       cookie:
-        name: SCG_SESSION_ID
+        name: GATEWAY_SESSION_ID
         # 禁止JS读取cookie
         http-only: false
         secure: true
@@ -37,7 +37,7 @@ spring:
             provider: spring
             client-id: gateway-client
             client-secret: secret
-            client-authentication-method: client_secret_basic
+            client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             # {baseUrl}/login/oauth2/code/{registrationId}
             #"http://127.0.0.1:9999/login/oauth2/code/gateway-client-authorization-code"
