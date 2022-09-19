@@ -44,10 +44,9 @@ import java.util.UUID;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration(proxyBeanMethods = false)
-@RequiredArgsConstructor
+
 public class AuthorizationServerConfig {
 
-    private  UserDetailsService sysUserDetailService;
 
     /**
      * 授权配置
@@ -58,20 +57,10 @@ public class AuthorizationServerConfig {
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
-                .mvcMatchers("/foo/**")
-                .access("hasAuthority('ROLE_USER')").anyRequest().authenticated()
-                .and()
-                .formLogin( withDefaults())
-                .csrf().disable()
-                .apply(new CaptchaAuthenticationConfigurer(sysUserDetailService));
-
-        return http.build();
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+        return http.formLogin(withDefaults()).build();
     }
-
-
 
     /**
      * 注册客户端
@@ -151,15 +140,6 @@ public class AuthorizationServerConfig {
     @Bean
     public ProviderSettings providerSettings() {
         return ProviderSettings.builder().issuer("http://127.0.0.1:9000").build();
-    }
-
-    @Bean
-    UserDetailsService users() {
-        UserDetails user = User.withUsername("admin")
-                .password("{noop}123456")
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user);
     }
 
     @Bean
