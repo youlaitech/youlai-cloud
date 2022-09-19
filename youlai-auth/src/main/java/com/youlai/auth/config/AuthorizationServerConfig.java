@@ -1,11 +1,14 @@
 
 package com.youlai.auth.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.youlai.auth.extension.captcha.CaptchaAuthenticationConfigurer;
 import com.youlai.auth.jose.Jwks;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -13,9 +16,12 @@ import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -31,13 +37,17 @@ import org.springframework.security.oauth2.server.authorization.config.ClientSet
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.UUID;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration(proxyBeanMethods = false)
+@RequiredArgsConstructor
 public class AuthorizationServerConfig {
+
+    private  UserDetailsService sysUserDetailService;
 
     /**
      * 授权配置
@@ -48,9 +58,56 @@ public class AuthorizationServerConfig {
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        return http.formLogin(withDefaults()).build();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+                .authorizeRequests()
+                .mvcMatchers("/foo/**")
+                .access("hasAuthority('ROLE_USER')").anyRequest().authenticated()
+                .and()
+                .formLogin( withDefaults())
+                .csrf().disable()
+                .apply(new CaptchaAuthenticationConfigurer(sysUserDetailService));
+
+        return http.build();
+    }
+
+
+
+    /**
+     * 注册客户端
+     *
+     * @param jdbcTemplate 操作数据库
+     * @return 客户端仓库
+     */
+    @Bean
+    public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
+
+        // Save registered client in db as if in-memory
+        JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
+        RegisteredClient client = registeredClientRepository.findByClientId("gateway-client");
+
+        if (client == null) {
+            RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                    .clientId("gateway-client")
+                    .clientSecret("{noop}secret")
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                    .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                    .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                    .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                    .redirectUri("http://127.0.0.1:9999/login/oauth2/code/gateway-client-authorization-code")
+                    .redirectUri("http://127.0.0.1:9999/authorized")
+                    .scope(OidcScopes.OPENID)
+                    .scope(OidcScopes.PROFILE)
+                    .scope("message.read")
+                    .scope("message.write")
+                    .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                    .build();
+
+
+            registeredClientRepository.save(registeredClient);
+        }
+
+        return registeredClientRepository;
     }
 
     /**
@@ -105,5 +162,19 @@ public class AuthorizationServerConfig {
         return new InMemoryUserDetailsManager(user);
     }
 
+    @Bean
+    UserDetailsService notFoundUserDetailsService() {
+        return username -> {
+            throw new UsernameNotFoundException("用户未找到");
+        };
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new CoreJackson2Module());
+        // ... your other configuration
+        return mapper;
+    }
 
 }
