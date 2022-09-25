@@ -1,17 +1,13 @@
-package com.youlai.auth.extension.captcha;
+package com.youlai.auth.ext.captcha;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -34,7 +30,7 @@ public class CaptchaAuthenticationProvider implements AuthenticationProvider {
 
         String validateCode = authenticationToken.getValidateCode();
         String validateCodeCacheKey = authenticationToken.getValidateCodeCacheKey();
-        // 验证码校验
+        // 验证码校验 TODO
 
 
         // 用户名密码校验
@@ -42,7 +38,7 @@ public class CaptchaAuthenticationProvider implements AuthenticationProvider {
         String password = (String) authenticationToken.getCredentials();
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if (this.passwordEncoder.matches(password, userDetails.getPassword())) {
+       if (!this.passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("用户名密码错误");
         }
 

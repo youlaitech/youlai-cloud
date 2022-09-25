@@ -6,9 +6,9 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.youlai.auth.extension.captcha.CaptchaAuthenticationConfigurer;
+import com.youlai.auth.ext.captcha.CaptchaAuthenticationToken;
+import com.youlai.auth.jackson2.CaptchaAuthenticationTokenMixin;
 import com.youlai.auth.jose.Jwks;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -16,12 +16,11 @@ import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jackson2.CoreJackson2Module;
+import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -35,16 +34,13 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
+import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration(proxyBeanMethods = false)
-
 public class AuthorizationServerConfig {
 
 
@@ -59,7 +55,14 @@ public class AuthorizationServerConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        return http.formLogin(withDefaults()).build();
+        // @formatter:off
+        http
+                .exceptionHandling(exceptions ->
+                        exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+                )
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+        // @formatter:on
+        return http.build();
     }
 
     /**
@@ -99,16 +102,29 @@ public class AuthorizationServerConfig {
         return registeredClientRepository;
     }
 
-    /**
-     * 令牌的发放记录
-     *
-     * @param jdbcTemplate               操作数据库
-     * @param registeredClientRepository 客户端仓库
-     * @return 授权服务
-     */
+
     @Bean
-    public OAuth2AuthorizationService auth2AuthorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
-        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+    public OAuth2AuthorizationService auth2AuthorizationService(
+            JdbcTemplate jdbcTemplate,
+            RegisteredClientRepository registeredClientRepository
+    ) {
+
+        JdbcOAuth2AuthorizationService service = new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+        JdbcOAuth2AuthorizationService.OAuth2AuthorizationRowMapper rowMapper = new JdbcOAuth2AuthorizationService.OAuth2AuthorizationRowMapper(registeredClientRepository);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ClassLoader classLoader = JdbcOAuth2AuthorizationService.class.getClassLoader();
+        List<com.fasterxml.jackson.databind.Module> securityModules = SecurityJackson2Modules.getModules(classLoader);
+        objectMapper.registerModules(securityModules);
+        objectMapper.registerModules(new CoreJackson2Module());
+
+        // You will need to write the Mixin for your class so Jackson can marshall it.
+        objectMapper.addMixIn(CaptchaAuthenticationToken.class, CaptchaAuthenticationTokenMixin.class);
+
+        rowMapper.setObjectMapper(objectMapper);
+        service.setAuthorizationRowMapper(rowMapper);
+        return service;
+
     }
 
     /**
@@ -143,18 +159,8 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    UserDetailsService notFoundUserDetailsService() {
-        return username -> {
-            throw new UsernameNotFoundException("用户未找到");
-        };
-    }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new CoreJackson2Module());
-        // ... your other configuration
-        return mapper;
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
 }

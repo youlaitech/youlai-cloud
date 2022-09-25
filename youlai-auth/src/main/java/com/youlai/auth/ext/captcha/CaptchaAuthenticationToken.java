@@ -1,8 +1,7 @@
-package com.youlai.auth.extension.captcha;
+package com.youlai.auth.ext.captcha;
 
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
@@ -34,12 +33,10 @@ public class CaptchaAuthenticationToken extends AbstractAuthenticationToken {
         this.setAuthenticated(false);
     }
 
-    public CaptchaAuthenticationToken(String principal, String credentials, Collection<? extends GrantedAuthority> authorities) {
+    public CaptchaAuthenticationToken(Object principal, String credentials, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;
-        this.validateCode = validateCode;
-        this.validateCodeCacheKey = validateCodeCacheKey;
         super.setAuthenticated(true);
     }
 

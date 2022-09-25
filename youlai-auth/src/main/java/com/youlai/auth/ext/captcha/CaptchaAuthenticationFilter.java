@@ -1,18 +1,15 @@
-package com.youlai.auth.extension.captcha;
+package com.youlai.auth.ext.captcha;
 
 import cn.hutool.core.util.StrUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 
 /**
@@ -23,7 +20,7 @@ public class CaptchaAuthenticationFilter extends AbstractAuthenticationProcessin
 
     private boolean postOnly = true;
 
-    private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = new AntPathRequestMatcher("/login", "POST");
+    private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = new AntPathRequestMatcher("/login/captcha", "POST");
 
 
 
@@ -37,10 +34,10 @@ public class CaptchaAuthenticationFilter extends AbstractAuthenticationProcessin
         if (this.postOnly && !request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         } else {
-            String username = StrUtil.trimToEmpty("username");
-            String password = StrUtil.trimToEmpty("password");
-            String validateCode = StrUtil.trimToEmpty("validateCode");
-            String validateCodeCacheKey = StrUtil.trimToEmpty("validateCodeCacheKey");
+            String username = StrUtil.trimToEmpty(request.getParameter("username"));
+            String password = StrUtil.trimToEmpty(request.getParameter("password"));
+            String validateCode = StrUtil.trimToEmpty(request.getParameter("validateCode"));
+            String validateCodeCacheKey = StrUtil.trimToEmpty(request.getParameter("validateCodeCacheKey"));
 
             CaptchaAuthenticationToken authRequest = new CaptchaAuthenticationToken(username,password,validateCode,validateCodeCacheKey);
             this.setDetails(request, authRequest);

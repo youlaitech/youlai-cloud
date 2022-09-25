@@ -5,6 +5,7 @@ import com.youlai.common.result.ResultCode;
 import com.youlai.system.api.UserFeignClient;
 import com.youlai.system.dto.UserAuthDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service("sysUserDetailService")
 @RequiredArgsConstructor
+@Slf4j
 public class SysUserDetailServiceImpl implements UserDetailsService {
 
     private final UserFeignClient userFeignClient;
@@ -22,7 +24,14 @@ public class SysUserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SysUserDetails userDetails = null;
-        Result<UserAuthDTO> result = userFeignClient.getUserByUsername(username);
+        Result<UserAuthDTO> result = null;
+        try {
+
+            result = userFeignClient.getUserByUsername(username);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            e.printStackTrace();
+        }
         if (Result.isSuccess(result)) {
             UserAuthDTO user = result.getData();
             if (null != user) {

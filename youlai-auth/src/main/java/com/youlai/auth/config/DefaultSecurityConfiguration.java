@@ -1,15 +1,13 @@
 package com.youlai.auth.config;
 
-import com.youlai.auth.extension.captcha.CaptchaAuthenticationConfigurer;
+import com.youlai.auth.ext.captcha.CaptchaAuthenticationConfigurer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -19,7 +17,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class DefaultSecurityConfiguration {
 
-    private  UserDetailsService sysUserDetailService;
+    private final UserDetailsService sysUserDetailService;
+
+    private final PasswordEncoder passwordEncoder;
 
 
     @Bean
@@ -30,18 +30,10 @@ public class DefaultSecurityConfiguration {
                 )
                 .formLogin(withDefaults())
                 .csrf().disable()
-                .apply(new CaptchaAuthenticationConfigurer(sysUserDetailService))
+                .apply(new CaptchaAuthenticationConfigurer(sysUserDetailService,passwordEncoder))
         ;
         return http.build();
     }
 
-    @Bean
-    UserDetailsService users() {
-        UserDetails user = User.withUsername("admin")
-                .password("{noop}123456")
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user);
-    }
 
 }
