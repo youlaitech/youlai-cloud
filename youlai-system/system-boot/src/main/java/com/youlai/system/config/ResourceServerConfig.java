@@ -12,7 +12,7 @@ public class ResourceServerConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.authorizeRequests(request->request
-                .antMatchers(HttpMethod.GET,"/**").hasAuthority("SCOPE_message.read")
+                .antMatchers(HttpMethod.GET,"/**").permitAll()
                 .anyRequest().authenticated()
         );
         http.oauth2ResourceServer().jwt();

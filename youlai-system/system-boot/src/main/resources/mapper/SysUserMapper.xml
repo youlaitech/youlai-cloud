@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.youlai.admin.mapper.SysUserMapper">
+<mapper namespace="com.youlai.system.mapper.SysUserMapper">
 
     <!-- 用户分页列表 -->
     <select id="listUserPages" resultType="com.youlai.system.pojo.po.UserPO">

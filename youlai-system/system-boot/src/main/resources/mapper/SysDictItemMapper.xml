@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.youlai.admin.mapper.SysDictItemMapper">
+<mapper namespace="com.youlai.system.mapper.SysDictItemMapper">
 
     <select id="list" resultType="com.youlai.system.pojo.entity.SysDict" >
         SELECT
