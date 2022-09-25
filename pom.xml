@@ -30,7 +30,7 @@
         <spring-boot.version>2.7.2</spring-boot.version>
 
         <!-- spring cloud -->
-        <spring-cloud.version>2021.0.2</spring-cloud.version>
+        <spring-cloud.version>2021.0.4</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
 
         <!-- db && orm -->
