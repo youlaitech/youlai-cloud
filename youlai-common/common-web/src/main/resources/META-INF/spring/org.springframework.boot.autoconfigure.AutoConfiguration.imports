@@ -1,0 +1,2 @@
+com.youlai.common.web.config.FeignAutoConfiguration
+com.youlai.common.web.config.WebMvcAutoConfiguration
