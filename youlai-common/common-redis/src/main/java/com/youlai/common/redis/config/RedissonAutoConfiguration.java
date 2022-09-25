@@ -6,10 +6,10 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.config.SingleServerConfig;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * 分布式锁 Redisson 配置
@@ -20,8 +20,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @ConditionalOnProperty(prefix = "redisson",name = "address")
 @ConfigurationProperties(prefix = "redisson")
-@Configuration
-public class RedissonConfig {
+@AutoConfiguration
+public class RedissonAutoConfiguration {
 
     @Setter
     private String address;
