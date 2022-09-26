@@ -1,6 +1,6 @@
 package com.youlai.auth.config;
 
-import com.youlai.auth.ext.captcha.CaptchaAuthenticationConfigurer;
+import com.youlai.auth.captcha.CaptchaAuthenticationConfigurer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

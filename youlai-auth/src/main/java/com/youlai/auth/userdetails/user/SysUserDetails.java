@@ -1,6 +1,9 @@
 package com.youlai.auth.userdetails.user;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.fasterxml.jackson.annotation.JacksonAnnotation;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.youlai.common.constant.GlobalConstants;
 import com.youlai.common.enums.PasswordEncoderTypeEnum;
 import com.youlai.system.dto.UserAuthDTO;
@@ -9,8 +12,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -20,19 +23,19 @@ import java.util.Collection;
  * @date 2021/9/27
  */
 @Data
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+@JsonIgnoreProperties({"accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
 public class SysUserDetails implements UserDetails {
+
+    public SysUserDetails(){
+
+    }
 
     /**
      * 扩展字段：用户ID
      */
     private Long userId;
 
-    /**
-     * 扩展字段：认证身份标识，枚举值如下：
-     *
-     * @see com.youlai.common.enums.AuthenticationIdentityEnum
-     */
-    private String authenticationIdentity;
 
     /**
      * 扩展字段：部门ID
@@ -45,7 +48,8 @@ public class SysUserDetails implements UserDetails {
     private String username;
     private String password;
     private Boolean enabled;
-    private Collection<SimpleGrantedAuthority> authorities;
+
+    private Collection<? extends GrantedAuthority> authorities;
 
     /**
      * 系统管理用户
@@ -57,10 +61,11 @@ public class SysUserDetails implements UserDetails {
         this.setPassword(PasswordEncoderTypeEnum.BCRYPT.getPrefix() + user.getPassword());
         this.setEnabled(GlobalConstants.STATUS_YES.equals(user.getStatus()));
         if (CollectionUtil.isNotEmpty(user.getRoles())) {
-            authorities = new ArrayList<>();
-            user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+            authorities = user.getRoles().stream().map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toSet());
         }
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

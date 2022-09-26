@@ -1,7 +1,7 @@
 package com.youlai.auth.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.youlai.auth.ext.captcha.CaptchaAuthenticationToken;
+import com.youlai.auth.captcha.CaptchaAuthenticationToken;
 import com.youlai.auth.jackson2.CaptchaAuthenticationTokenMixin;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +10,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
+import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
 
 @Configuration
 public class SessionConfig implements BeanClassLoaderAware {
@@ -26,6 +27,7 @@ public class SessionConfig implements BeanClassLoaderAware {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModules(SecurityJackson2Modules.getModules(this.classLoader));
         objectMapper.registerModules(new CoreJackson2Module());
+        objectMapper.registerModules(new OAuth2AuthorizationServerJackson2Module());
 
         objectMapper.addMixIn(CaptchaAuthenticationToken.class, CaptchaAuthenticationTokenMixin.class);
         return new GenericJackson2JsonRedisSerializer(objectMapper);

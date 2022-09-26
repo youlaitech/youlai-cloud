@@ -1,4 +1,4 @@
-package com.youlai.auth.ext.captcha;
+package com.youlai.auth.captcha;
 
 import cn.hutool.core.util.StrUtil;
 import org.springframework.security.authentication.AuthenticationManager;

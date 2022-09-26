@@ -1,5 +1,7 @@
-package com.youlai.auth.ext.captcha;
+package com.youlai.auth.captcha;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +12,14 @@ import java.util.Collection;
 /**
  * @see org.springframework.security.authentication.UsernamePasswordAuthenticationToken
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+@JsonIgnoreProperties({"validateCode", "validateCodeCacheKey"})
 public class CaptchaAuthenticationToken extends AbstractAuthenticationToken {
+
+
+    public CaptchaAuthenticationToken(){
+        super(null);
+    }
 
     private static final long serialVersionUID = 570L;
 

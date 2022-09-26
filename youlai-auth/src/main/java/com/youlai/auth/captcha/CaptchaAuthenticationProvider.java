@@ -1,4 +1,4 @@
-package com.youlai.auth.ext.captcha;
+package com.youlai.auth.captcha;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,7 +39,7 @@ public class CaptchaAuthenticationProvider implements AuthenticationProvider {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
        if (!this.passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("用户名密码错误");
+            throw new BadCredentialsException("用户名或密码错误");
         }
 
         CaptchaAuthenticationToken result=new CaptchaAuthenticationToken(username,password,userDetails.getAuthorities());

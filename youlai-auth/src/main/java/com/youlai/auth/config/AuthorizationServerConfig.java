@@ -6,7 +6,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.youlai.auth.ext.captcha.CaptchaAuthenticationToken;
+import com.youlai.auth.captcha.CaptchaAuthenticationToken;
 import com.youlai.auth.jackson2.CaptchaAuthenticationTokenMixin;
 import com.youlai.auth.jose.Jwks;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +34,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
+import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
@@ -117,10 +118,10 @@ public class AuthorizationServerConfig {
         List<com.fasterxml.jackson.databind.Module> securityModules = SecurityJackson2Modules.getModules(classLoader);
         objectMapper.registerModules(securityModules);
         objectMapper.registerModules(new CoreJackson2Module());
+        objectMapper.registerModules(new OAuth2AuthorizationServerJackson2Module());
 
-        // You will need to write the Mixin for your class so Jackson can marshall it.
+        // You will need to write the Mixin for your class so Jackson can marsh all it.
         objectMapper.addMixIn(CaptchaAuthenticationToken.class, CaptchaAuthenticationTokenMixin.class);
-
         rowMapper.setObjectMapper(objectMapper);
         service.setAuthorizationRowMapper(rowMapper);
         return service;
