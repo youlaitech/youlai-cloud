@@ -37,12 +37,14 @@ public class CaptchaAuthenticationProvider implements AuthenticationProvider {
         String username = (String) authenticationToken.getPrincipal();
         String password = (String) authenticationToken.getCredentials();
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-       if (!this.passwordEncoder.matches(password, userDetails.getPassword())) {
+        UserDetails user = userDetailsService.loadUserByUsername(username);
+        if (!this.passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("用户名或密码错误");
         }
 
-        CaptchaAuthenticationToken result=new CaptchaAuthenticationToken(username,password,userDetails.getAuthorities());
+        // 认证成功
+        Object principalToReturn = user;
+        CaptchaAuthenticationToken result = new CaptchaAuthenticationToken(principalToReturn, password, user.getAuthorities());
         return result;
     }
 
