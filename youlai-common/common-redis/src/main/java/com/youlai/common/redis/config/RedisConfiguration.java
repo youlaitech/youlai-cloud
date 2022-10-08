@@ -12,7 +12,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @AutoConfiguration
-public class RedisAutoConfiguration {
+public class RedisConfiguration {
     @Bean
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
 

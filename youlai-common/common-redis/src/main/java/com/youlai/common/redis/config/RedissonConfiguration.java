@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnProperty(prefix = "redisson",name = "address")
 @ConfigurationProperties(prefix = "redisson")
 @AutoConfiguration
-public class RedissonAutoConfiguration {
+public class RedissonConfiguration {
 
     @Setter
     private String address;
