@@ -15,7 +15,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
-public class DefaultSecurityConfiguration {
+public class SecurityConfiguration {
+
 
     private final UserDetailsService sysUserDetailService;
 
@@ -30,7 +31,7 @@ public class DefaultSecurityConfiguration {
                 )
                 .formLogin(withDefaults())
                 .csrf().disable()
-                .apply(new CaptchaAuthenticationConfigurer(sysUserDetailService,passwordEncoder))
+        // .apply(new CaptchaAuthenticationConfigurer(sysUserDetailService,passwordEncoder))
         ;
         return http.build();
     }

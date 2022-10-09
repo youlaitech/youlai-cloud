@@ -1,7 +1,5 @@
 package com.youlai.auth.captcha;
 
-import com.youlai.auth.handler.DefaultAuthenticationFailureHandler;
-import com.youlai.auth.handler.DefaultAuthenticationSuccessHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,9 +32,6 @@ public class CaptchaAuthenticationConfigurer extends SecurityConfigurerAdapter<D
     @Override
     public void configure(HttpSecurity http) {
         CaptchaAuthenticationFilter captchaAuthenticationFilter = new CaptchaAuthenticationFilter(http.getSharedObject(AuthenticationManager.class));
-
-        captchaAuthenticationFilter.setAuthenticationSuccessHandler(new DefaultAuthenticationSuccessHandler());
-        captchaAuthenticationFilter.setAuthenticationFailureHandler(new DefaultAuthenticationFailureHandler());
 
         CaptchaAuthenticationProvider captchaAuthenticationProvider = new CaptchaAuthenticationProvider();
         captchaAuthenticationProvider.setUserDetailsService(this.userDetailsService);

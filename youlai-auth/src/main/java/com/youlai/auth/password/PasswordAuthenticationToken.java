@@ -1,4 +1,4 @@
-package com.youlai.auth.authentication.password;
+package com.youlai.auth.password;
 
 import cn.hutool.core.lang.Assert;
 import io.reactivex.rxjava3.annotations.Nullable;

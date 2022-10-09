@@ -1,22 +1,31 @@
-package com.youlai.auth.authentication.password;
+package com.youlai.auth.password;
 
 import cn.hutool.core.lang.Assert;
-import com.mysql.cj.protocol.AuthenticationProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
-import org.springframework.security.oauth2.core.OAuth2Token;
+import org.springframework.security.oauth2.core.*;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.context.ProviderContextHolder;
+import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
+import org.springframework.util.CollectionUtils;
 
+import java.security.Principal;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class PasswordAuthenticationProvider implements AuthenticationProvider {
@@ -36,7 +45,7 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
      * @since 0.2.3
      */
     public PasswordAuthenticationProvider(AuthenticationManager authenticationManager,
-                                                             OAuth2AuthorizationService authorizationService, OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
+                                          OAuth2AuthorizationService authorizationService, OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
         Assert.notNull(authorizationService, "authorizationService cannot be null");
         Assert.notNull(tokenGenerator, "tokenGenerator cannot be null");
         this.authenticationManager = authenticationManager;
@@ -79,7 +88,8 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
                 .providerContext(ProviderContextHolder.getProviderContext())
                 .authorizedScopes(authorizedScopes)
                 .authorizationGrantType(AuthorizationGrantType.PASSWORD)
-                .authorizationGrant(resouceOwnerPasswordAuthentication);
+                .authorizationGrant(passwordAuthentication)
+                ;
         // @formatter:on
 
         // ----- Access token -----
@@ -130,19 +140,18 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
 
         this.authorizationService.save(authorization);
 
-        LOGGER.debug("OAuth2Authorization saved successfully");
+        log.debug("OAuth2Authorization saved successfully");
 
         Map<String, Object> additionalParameters = Collections.emptyMap();
 
-        LOGGER.debug("returning OAuth2AccessTokenAuthenticationToken");
+        log.debug("returning OAuth2AccessTokenAuthenticationToken");
 
         return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken, refreshToken, additionalParameters);
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        boolean supports = OAuth2ResourceOwnerPasswordAuthenticationToken.class.isAssignableFrom(authentication);
-        LOGGER.debug("supports authentication=" + authentication + " returning " + supports);
+        boolean supports = PasswordAuthenticationToken.class.isAssignableFrom(authentication);
         return supports;
     }
 
@@ -154,7 +163,7 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
         String password = (String) additionalParameters.get(OAuth2ParameterNames.PASSWORD);
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        LOGGER.debug("got usernamePasswordAuthenticationToken=" + usernamePasswordAuthenticationToken);
+        log.debug("got usernamePasswordAuthenticationToken=" + usernamePasswordAuthenticationToken);
 
         Authentication usernamePasswordAuthentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         return usernamePasswordAuthentication;

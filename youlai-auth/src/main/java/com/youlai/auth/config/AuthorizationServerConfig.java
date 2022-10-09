@@ -6,6 +6,8 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.youlai.auth.password.PasswordAuthenticationConverter;
+import com.youlai.auth.password.PasswordAuthenticationProvider;
 import com.youlai.auth.captcha.CaptchaAuthenticationToken;
 import com.youlai.auth.jackson2.CaptchaAuthenticationTokenMixin;
 import com.youlai.auth.jose.Jwks;
@@ -14,15 +16,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
@@ -35,35 +40,68 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
+import org.springframework.security.oauth2.server.authorization.web.authentication.DelegatingAuthenticationConverter;
+import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2AuthorizationCodeAuthenticationConverter;
+import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2ClientCredentialsAuthenticationConverter;
+import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2RefreshTokenAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
 
-
     /**
      * 授权配置
      *
      * @param http
+     *
      * @return
      * @throws Exception
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        // @formatter:off
+        OAuth2AuthorizationServerConfigurer<HttpSecurity> authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer<>();
+
+        http.apply(authorizationServerConfigurer.tokenEndpoint((tokenEndpoint) ->
+                tokenEndpoint.accessTokenRequestConverter(
+                        new DelegatingAuthenticationConverter(Arrays.asList(
+                                new OAuth2AuthorizationCodeAuthenticationConverter(),
+                                new OAuth2RefreshTokenAuthenticationConverter(),
+                                new OAuth2ClientCredentialsAuthenticationConverter(),
+                                new PasswordAuthenticationConverter()
+                        )))
+        ));
+
+        authorizationServerConfigurer.authorizationEndpoint(authorizationEndpoint->authorizationEndpoint.consentPage("/oauth2/consent"));
+
+        RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
+
         http
-                .exceptionHandling(exceptions ->
-                        exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-                )
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-        // @formatter:on
-        return http.build();
+                .requestMatcher(endpointsMatcher)
+                .authorizeRequests(authorizeRequests->authorizeRequests.anyRequest().authenticated())
+                .csrf(csrf->csrf.ignoringRequestMatchers(endpointsMatcher))
+                .apply(authorizationServerConfigurer)
+        ;
+
+        SecurityFilterChain securityFilterChain = http.formLogin(Customizer.withDefaults()).build();
+
+
+        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+        OAuth2AuthorizationService authorizationService = http.getSharedObject(OAuth2AuthorizationService.class);
+        OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = http.getSharedObject(OAuth2TokenGenerator.class);
+
+        PasswordAuthenticationProvider passwordAuthenticationProvider=new PasswordAuthenticationProvider(authenticationManager,
+                authorizationService,
+                tokenGenerator);
+        http.authenticationProvider(passwordAuthenticationProvider);
+
+        return securityFilterChain;
     }
 
     /**
