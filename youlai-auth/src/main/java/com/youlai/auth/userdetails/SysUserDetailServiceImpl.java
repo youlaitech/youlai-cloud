@@ -1,4 +1,4 @@
-package com.youlai.auth.userdetails.user;
+package com.youlai.auth.userdetails;
 
 import com.youlai.common.result.Result;
 import com.youlai.common.result.ResultCode;

@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Api(tags = "部门接口")
 @RestController
-@RequestMapping("/api/v1/departments")
+@RequestMapping("/api/v1/dept")
 @RequiredArgsConstructor
 public class SysDeptController {
 

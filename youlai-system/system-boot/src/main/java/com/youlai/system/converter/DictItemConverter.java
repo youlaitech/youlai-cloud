@@ -1,7 +1,7 @@
 package com.youlai.system.converter;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.youlai.system.pojo.entity.SysDict;
+import com.youlai.system.pojo.entity.SysDictItem;
 import com.youlai.system.pojo.form.DictItemForm;
 import com.youlai.system.pojo.vo.dict.DictItemPageVO;
 import org.mapstruct.InheritInverseConfiguration;
@@ -14,12 +14,12 @@ import org.mapstruct.Mapper;
  * @date 2022/6/8
  */
 @Mapper(componentModel = "spring")
-public interface DictConverter {
+public interface DictItemConverter {
 
-    Page<DictItemPageVO> entity2Page(Page<SysDict> page);
+    Page<DictItemPageVO> entity2Page(Page<SysDictItem> page);
 
-    DictItemForm entity2Form(SysDict entity);
+    DictItemForm entity2Form(SysDictItem entity);
 
     @InheritInverseConfiguration(name="entity2Form")
-    SysDict form2Entity(DictItemForm entity);
+    SysDictItem form2Entity(DictItemForm entity);
 }

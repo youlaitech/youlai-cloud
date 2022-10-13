@@ -5,14 +5,14 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.youlai.system.converter.DictConverter;
-import com.youlai.system.mapper.SysDictMapper;
-import com.youlai.system.pojo.entity.SysDict;
+import com.youlai.common.web.domain.Option;
+import com.youlai.system.converter.DictItemConverter;
+import com.youlai.system.pojo.entity.SysDictItem;
 import com.youlai.system.pojo.form.DictItemForm;
 import com.youlai.system.pojo.query.DictItemPageQuery;
 import com.youlai.system.pojo.vo.dict.DictItemPageVO;
-import com.youlai.system.service.SysDictService;
-import com.youlai.common.web.domain.Option;
+import com.youlai.system.service.SysDictItemService;
+import com.youlai.system.mapper.SysDictItemMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +22,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 /**
- * 字典数据项业务实现类
+ * 数据字典项业务实现类
  *
  * @author haoxr
- * @date 2022/6/9
+ * @date 2022/10/12
  */
 @Service
 @RequiredArgsConstructor
-public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> implements SysDictService {
+public class SysDictItemServiceImpl extends ServiceImpl<SysDictItemMapper, SysDictItem> implements SysDictItemService {
 
-    private final DictConverter dictConverter;
+    private final DictItemConverter dictItemConverter;
 
     /**
      * 字典数据项分页列表
@@ -50,16 +49,16 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
         String typeCode = queryParams.getTypeCode();
 
         // 查询数据
-        Page<SysDict> dictItemPage = this.page(
+        Page<SysDictItem> dictItemPage = this.page(
                 new Page<>(pageNum, pageSize),
-                new LambdaQueryWrapper<SysDict>()
-                        .like(StrUtil.isNotBlank(keywords), SysDict::getLabel, keywords)
-                        .eq(StrUtil.isNotBlank(typeCode), SysDict::getCode, typeCode)
-                        .select(SysDict::getId, SysDict::getLabel, SysDict::getValue, SysDict::getStatus)
+                new LambdaQueryWrapper<SysDictItem>()
+                        .like(StrUtil.isNotBlank(keywords), SysDictItem::getName, keywords)
+                        .eq(StrUtil.isNotBlank(typeCode), SysDictItem::getTypeCode, typeCode)
+                        .select(SysDictItem::getId, SysDictItem::getName, SysDictItem::getValue, SysDictItem::getStatus)
         );
 
         // 实体转换
-        Page<DictItemPageVO> pageResult = dictConverter.entity2Page(dictItemPage);
+        Page<DictItemPageVO> pageResult = dictItemConverter.entity2Page(dictItemPage);
         return pageResult;
     }
 
@@ -70,23 +69,23 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
      * @return
      */
     @Override
-    public DictItemForm getDictItemFormData(Long id) {
+    public DictItemForm getDictItemForm(Long id) {
         // 获取entity
-        SysDict entity = this.getOne(new LambdaQueryWrapper<SysDict>()
-                .eq(SysDict::getId, id)
+        SysDictItem entity = this.getOne(new LambdaQueryWrapper<SysDictItem>()
+                .eq(SysDictItem::getId, id)
                 .select(
-                        SysDict::getId,
-                        SysDict::getCode,
-                        SysDict::getLabel,
-                        SysDict::getValue,
-                        SysDict::getStatus,
-                        SysDict::getSort,
-                        SysDict::getDescription
+                        SysDictItem::getId,
+                        SysDictItem::getTypeCode,
+                        SysDictItem::getName,
+                        SysDictItem::getValue,
+                        SysDictItem::getStatus,
+                        SysDictItem::getSort,
+                        SysDictItem::getRemark
                 ));
         Assert.isTrue(entity != null, "字典数据项不存在");
 
         // 实体转换
-        DictItemForm dictItemForm = dictConverter.entity2Form(entity);
+        DictItemForm dictItemForm = dictItemConverter.entity2Form(entity);
         return dictItemForm;
     }
 
@@ -99,7 +98,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     @Override
     public boolean saveDictItem(DictItemForm dictItemForm) {
         // 实体对象转换 form->entity
-        SysDict entity = dictConverter.form2Entity(dictItemForm);
+        SysDictItem entity = dictItemConverter.form2Entity(dictItemForm);
         // 持久化
         boolean result = this.save(entity);
         return result;
@@ -114,7 +113,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
      */
     @Override
     public boolean updateDictItem(Long id, DictItemForm dictItemForm) {
-        SysDict entity = dictConverter.form2Entity(dictItemForm);
+        SysDictItem entity = dictItemConverter.form2Entity(dictItemForm);
         boolean result = this.updateById(entity);
         return result;
     }
@@ -150,17 +149,22 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     public List<Option> listDictItemsByTypeCode(String typeCode) {
 
         // 数据字典项
-        List<SysDict> dictItems = this.list(new LambdaQueryWrapper<SysDict>()
-                .eq(SysDict::getCode, typeCode)
-                .select(SysDict::getValue, SysDict::getLabel)
+        List<SysDictItem> dictItems = this.list(new LambdaQueryWrapper<SysDictItem>()
+                .eq(SysDictItem::getTypeCode, typeCode)
+                .select(SysDictItem::getValue, SysDictItem::getName)
         );
 
         // 转换下拉数据
-        List<Option> options = Optional.ofNullable(dictItems).orElse(new ArrayList<>())
-                .stream()
-                .map(dictItem -> new Option(dictItem.getValue(), dictItem.getLabel()))
+        List<Option> options = Optional.ofNullable(dictItems).orElse(new ArrayList<>()).stream()
+                .map(dictItem -> new Option(dictItem.getValue(), dictItem.getName()))
                 .collect(Collectors.toList());
 
         return options;
     }
+
+
 }
+
+
+
+

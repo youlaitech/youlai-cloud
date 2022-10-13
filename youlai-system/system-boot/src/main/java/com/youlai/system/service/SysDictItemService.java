@@ -1,24 +1,19 @@
 package com.youlai.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.youlai.common.web.domain.Option;
+import com.youlai.system.pojo.entity.SysDictItem;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.youlai.system.pojo.entity.SysDict;
 import com.youlai.system.pojo.form.DictItemForm;
 import com.youlai.system.pojo.query.DictItemPageQuery;
 import com.youlai.system.pojo.vo.dict.DictItemPageVO;
-import com.youlai.common.web.domain.Option;
 
 import java.util.List;
 
-
 /**
- * 字典数据项业务接口层
  *
- * @author haoxr
- * @date 2022/6/9
  */
-public interface SysDictService extends IService<SysDict> {
-
+public interface SysDictItemService extends IService<SysDictItem> {
     /**
      * 字典数据项分页列表
      *
@@ -33,7 +28,7 @@ public interface SysDictService extends IService<SysDict> {
      * @param id 字典数据项ID
      * @return
      */
-    DictItemForm getDictItemFormData(Long id);
+    DictItemForm getDictItemForm(Long id);
 
     /**
      * 新增字典数据项

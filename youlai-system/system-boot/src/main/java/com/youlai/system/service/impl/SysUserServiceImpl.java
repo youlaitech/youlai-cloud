@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.youlai.system.converter.UserConverter;
 import com.youlai.system.dto.UserAuthDTO;
-import com.youlai.system.listener.excel.UserImportListener;
+import com.youlai.system.listener.UserImportListener;
 import com.youlai.system.mapper.SysUserMapper;
 import com.youlai.system.pojo.dto.UserImportDTO;
 import com.youlai.system.pojo.entity.SysUser;
@@ -33,7 +33,6 @@ import com.youlai.system.service.SysUserService;
 import com.youlai.common.base.IBaseEnum;
 import com.youlai.common.constant.SystemConstants;
 import com.youlai.common.enums.GenderEnum;
-import com.youlai.common.web.util.UserUtils;
 import com.youlai.system.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -188,7 +187,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @return
      */
     @Override
-    public boolean updateUserPassword(Long userId, String password) {
+    public boolean updatePassword(Long userId, String password) {
         String encryptedPassword = passwordEncoder.encode(password);
         boolean result = this.update(new LambdaUpdateWrapper<SysUser>()
                 .eq(SysUser::getId, userId)

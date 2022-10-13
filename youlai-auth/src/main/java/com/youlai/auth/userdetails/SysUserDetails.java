@@ -1,4 +1,4 @@
-package com.youlai.auth.userdetails.user;
+package com.youlai.auth.userdetails;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.jackson.annotation.JacksonAnnotation;

@@ -52,7 +52,7 @@ public class SysUserController {
         return PageResult.success(result);
     }
 
-    @ApiOperation(value = "用户表单数据")
+    @ApiOperation(value = "用户详情")
     @GetMapping("/{userId}")
     public Result<UserDetailVO> getUserDetail(@ApiParam(value = "用户ID") @PathVariable Long userId) {
         UserDetailVO userDetail = userService.getUserDetail(userId);
@@ -68,28 +68,35 @@ public class SysUserController {
 
     @ApiOperation(value = "修改用户")
     @PutMapping(value = "/{userId}")
-    public Result updateUser(@ApiParam("用户ID") @PathVariable Long userId, @RequestBody @Validated UserForm userForm) {
+    public Result updateUser(
+            @ApiParam("用户ID") @PathVariable Long userId,
+            @RequestBody @Validated UserForm userForm) {
         boolean result = userService.updateUser(userId, userForm);
         return Result.judge(result);
     }
 
     @ApiOperation(value = "删除用户")
     @DeleteMapping("/{ids}")
-    public Result deleteUsers(@ApiParam("用户ID，多个以英文逗号(,)分割") @PathVariable String ids) {
+    public Result deleteUsers(
+            @ApiParam("用户ID，多个以英文逗号(,)分割") @PathVariable String ids
+    ) {
         boolean result = userService.deleteUsers(ids);
         return Result.judge(result);
     }
 
     @ApiOperation(value = "修改用户密码")
     @PatchMapping(value = "/{userId}/password")
-    public Result updateUserPassword(@ApiParam("用户ID") @PathVariable Long userId, @RequestParam String password) {
-        boolean result = userService.updateUserPassword(userId, password);
+    public Result updatePassword(
+            @ApiParam("用户ID") @PathVariable Long userId,
+            @RequestParam String password
+    ) {
+        boolean result = userService.updatePassword(userId, password);
         return Result.judge(result);
     }
 
     @ApiOperation(value = "修改用户状态")
     @PatchMapping(value = "/{userId}/status")
-    public Result updateUserPassword(@ApiParam("用户ID") @PathVariable Long userId, @RequestParam Integer status) {
+    public Result updatePassword(@ApiParam("用户ID") @PathVariable Long userId, @RequestParam Integer status) {
         boolean result = userService.update(new LambdaUpdateWrapper<SysUser>()
                 .eq(SysUser::getId, userId)
                 .set(SysUser::getStatus, status)

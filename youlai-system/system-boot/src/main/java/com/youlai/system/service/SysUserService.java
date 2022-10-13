@@ -75,7 +75,7 @@ public interface SysUserService extends IService<SysUser> {
      * @param password 用户密码
      * @return
      */
-    boolean updateUserPassword(Long userId, String password);
+    boolean updatePassword(Long userId, String password);
 
     /**
      * 根据用户名获取认证信息
