@@ -4,7 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.youlai.system.dto.UserAuthDTO;
+import com.youlai.system.dto.SysUserDetailsDTO;
 import com.youlai.system.pojo.dto.UserImportDTO;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.form.UserForm;
@@ -113,8 +113,8 @@ public class SysUserController {
 
     @ApiOperation(value = "根据用户名获取认证信息", notes = "提供用于用户登录认证信息", hidden = true)
     @GetMapping("/username/{username}")
-    public Result<UserAuthDTO> getAuthInfoByUsername(@ApiParam("用户名") @PathVariable String username) {
-        UserAuthDTO user = userService.getAuthInfoByUsername(username);
+    public Result<SysUserDetailsDTO> getAuthInfoByUsername(@ApiParam("用户名") @PathVariable String username) {
+        SysUserDetailsDTO user = userService.getAuthInfoByUsername(username);
         return Result.success(user);
     }
 

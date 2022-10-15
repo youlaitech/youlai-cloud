@@ -1,11 +1,14 @@
 package com.youlai.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.youlai.common.web.domain.Option;
 import com.youlai.system.pojo.entity.SysDictType;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.youlai.system.pojo.form.DictTypeForm;
 import com.youlai.system.pojo.query.DictTypePageQuery;
 import com.youlai.system.pojo.vo.dict.DictTypePageVO;
+
+import java.util.List;
 
 /**
  * 数据字典类型业务接口
@@ -60,4 +63,11 @@ public interface SysDictTypeService extends IService<SysDictType> {
     boolean deleteDictTypes(String idsStr);
 
 
+    /**
+     * 获取字典类型的数据项
+     *
+     * @param typeCode
+     * @return
+     */
+    List<Option> listItemsByTypeCode(String typeCode);
 }

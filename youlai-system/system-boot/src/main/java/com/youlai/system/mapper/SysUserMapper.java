@@ -2,7 +2,7 @@ package com.youlai.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.youlai.system.dto.UserAuthDTO;
+import com.youlai.system.dto.SysUserDetailsDTO;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.po.UserDetailPO;
 import com.youlai.system.pojo.po.UserPO;
@@ -46,7 +46,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @param username
      * @return
      */
-    UserAuthDTO getAuthInfoByUsername(String username);
+    SysUserDetailsDTO getAuthInfoByUsername(String username);
 
     /**
      * 获取导出用户列表

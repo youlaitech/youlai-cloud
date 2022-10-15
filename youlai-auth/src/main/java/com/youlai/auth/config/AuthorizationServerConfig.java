@@ -6,8 +6,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.youlai.auth.captcha.CaptchaAuthenticationToken;
-import com.youlai.auth.jackson2.CaptchaAuthenticationTokenMixin;
 import com.youlai.auth.jose.Jwks;
 import com.youlai.auth.password.PasswordAuthenticationConverter;
 import com.youlai.auth.password.PasswordAuthenticationProvider;
@@ -21,6 +19,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -94,6 +94,8 @@ public class AuthorizationServerConfig {
         OAuth2AuthorizationService authorizationService = http.getSharedObject(OAuth2AuthorizationService.class);
         OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = http.getSharedObject(OAuth2TokenGenerator.class);
 
+
+        // 密码模式
         PasswordAuthenticationProvider passwordAuthenticationProvider=new PasswordAuthenticationProvider(authenticationManager,
                 authorizationService,
                 tokenGenerator);
@@ -156,8 +158,6 @@ public class AuthorizationServerConfig {
         objectMapper.registerModules(new CoreJackson2Module());
         objectMapper.registerModules(new OAuth2AuthorizationServerJackson2Module());
 
-        // You will need to write the Mixin for your class so Jackson can marsh all it.
-        objectMapper.addMixIn(CaptchaAuthenticationToken.class, CaptchaAuthenticationTokenMixin.class);
         rowMapper.setObjectMapper(objectMapper);
         service.setAuthorizationRowMapper(rowMapper);
         return service;
@@ -194,4 +194,10 @@ public class AuthorizationServerConfig {
     public ProviderSettings providerSettings() {
         return ProviderSettings.builder().issuer("http://127.0.0.1:9000").build();
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
 }

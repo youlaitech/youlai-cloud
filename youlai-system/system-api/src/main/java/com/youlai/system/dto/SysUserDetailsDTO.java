@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2021/9/27
  */
 @Data
-public class UserAuthDTO {
+public class SysUserDetailsDTO {
 
     /**
      * 用户ID

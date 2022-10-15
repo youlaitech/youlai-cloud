@@ -3,7 +3,6 @@ package com.youlai.system.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.youlai.common.result.PageResult;
 import com.youlai.common.result.Result;
-import com.youlai.common.web.domain.Option;
 import com.youlai.system.pojo.form.DictItemForm;
 import com.youlai.system.pojo.query.DictItemPageQuery;
 import com.youlai.system.pojo.vo.dict.DictItemPageVO;
@@ -13,8 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Api(tags = "字典数据项接口")
 @RestController
@@ -68,15 +65,6 @@ public class SysDictItemController {
     ) {
         boolean result = dictItemService.deleteDictItems(ids);
         return Result.judge(result);
-    }
-
-    @ApiOperation(value = "字典数据项下拉数据")
-    @GetMapping("/options")
-    public Result<List<Option>> listDictItemOptions(
-            @ApiParam("字典类型编码") @RequestParam String typeCode
-    ) {
-        List<Option> list = dictItemService.listDictItemsByTypeCode(typeCode);
-        return Result.success(list);
     }
 
 }

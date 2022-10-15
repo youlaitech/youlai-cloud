@@ -3,6 +3,7 @@ package com.youlai.system.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.youlai.common.result.PageResult;
 import com.youlai.common.result.Result;
+import com.youlai.common.web.domain.Option;
 import com.youlai.system.pojo.form.DictTypeForm;
 import com.youlai.system.pojo.query.DictTypePageQuery;
 import com.youlai.system.pojo.vo.dict.DictTypePageVO;
@@ -13,6 +14,8 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(tags = "字典类型接口")
 @RestController
 @RequestMapping("/api/v1/dict/types")
@@ -22,14 +25,14 @@ public class SysDictTypeController {
     private final SysDictTypeService dictTypeService;
 
     @ApiOperation(value = "字典类型分页列表")
-    @GetMapping
+    @GetMapping("/pages")
     public PageResult<DictTypePageVO> listDictTypePages(DictTypePageQuery queryParams) {
         Page<DictTypePageVO> result = dictTypeService.listDictTypePages(queryParams);
         return PageResult.success(result);
     }
 
     @ApiOperation(value = "字典类型表单详情")
-    @GetMapping("/{id}/form_data")
+    @GetMapping("/{id}/form")
     public Result<DictTypeForm> getDictTypeFormData(
             @ApiParam("字典ID") @PathVariable Long id
     ) {
@@ -58,5 +61,14 @@ public class SysDictTypeController {
     ) {
         boolean result = dictTypeService.deleteDictTypes(ids);
         return Result.judge(result);
+    }
+
+    @ApiOperation(value = "获取字典类型的数据项")
+    @GetMapping("/{typeCode}/items")
+    public Result<List<Option>> listItemsByTypeCode(
+            @ApiParam("字典类型编码") @RequestParam String typeCode
+    ) {
+        List<Option> list = dictTypeService.listItemsByTypeCode(typeCode);
+        return Result.success(list);
     }
 }

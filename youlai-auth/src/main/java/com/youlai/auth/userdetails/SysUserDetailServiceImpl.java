@@ -3,7 +3,7 @@ package com.youlai.auth.userdetails;
 import com.youlai.common.result.Result;
 import com.youlai.common.result.ResultCode;
 import com.youlai.system.api.UserFeignClient;
-import com.youlai.system.dto.UserAuthDTO;
+import com.youlai.system.dto.SysUserDetailsDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -24,7 +24,7 @@ public class SysUserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SysUserDetails userDetails = null;
-        Result<UserAuthDTO> result = null;
+        Result<SysUserDetailsDTO> result = null;
         try {
 
             result = userFeignClient.getUserByUsername(username);
@@ -33,7 +33,7 @@ public class SysUserDetailServiceImpl implements UserDetailsService {
             e.printStackTrace();
         }
         if (Result.isSuccess(result)) {
-            UserAuthDTO user = result.getData();
+            SysUserDetailsDTO user = result.getData();
             if (null != user) {
                 userDetails = new SysUserDetails(user);
             }

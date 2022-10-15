@@ -77,7 +77,7 @@
     </select>
 
     <!-- 用户认证信息映射 -->
-    <resultMap id="AuthUserMap" type="com.youlai.system.dto.UserAuthDTO">
+    <resultMap id="AuthUserMap" type="com.youlai.system.dto.SysUserDetailsDTO">
         <id property="userId" column="userId" jdbcType="BIGINT"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>

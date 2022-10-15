@@ -54,12 +54,4 @@ public interface SysDictItemService extends IService<SysDictItem> {
      * @return
      */
     boolean deleteDictItems(String idsStr);
-
-    /**
-     * 根据字典类型编码获取字典数据项
-     *
-     * @param typeCode 字典类型编码
-     * @return
-     */
-    List<Option> listDictItemsByTypeCode(String typeCode);
 }

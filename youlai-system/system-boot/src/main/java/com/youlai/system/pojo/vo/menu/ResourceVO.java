@@ -22,8 +22,6 @@ public class ResourceVO {
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     private List<ResourceVO> children;
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private List<Option> perms;
 
 
 }

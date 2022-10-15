@@ -138,31 +138,6 @@ public class SysDictItemServiceImpl extends ServiceImpl<SysDictItemMapper, SysDi
         return result;
     }
 
-
-    /**
-     * 根据字典类型编码获取字典数据项
-     *
-     * @param typeCode 字典类型编码
-     * @return
-     */
-    @Override
-    public List<Option> listDictItemsByTypeCode(String typeCode) {
-
-        // 数据字典项
-        List<SysDictItem> dictItems = this.list(new LambdaQueryWrapper<SysDictItem>()
-                .eq(SysDictItem::getTypeCode, typeCode)
-                .select(SysDictItem::getValue, SysDictItem::getName)
-        );
-
-        // 转换下拉数据
-        List<Option> options = Optional.ofNullable(dictItems).orElse(new ArrayList<>()).stream()
-                .map(dictItem -> new Option(dictItem.getValue(), dictItem.getName()))
-                .collect(Collectors.toList());
-
-        return options;
-    }
-
-
 }
 
 

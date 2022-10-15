@@ -31,7 +31,7 @@
                t1.icon,
                t1.sort,
                t1.visible,
-               t1.redirect,
+               t1.redirect_url,
                t3.code,
                t1.type
         from sys_menu t1

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.youlai.common.web.domain.Option;
 import com.youlai.system.converter.DictTypeConverter;
 import com.youlai.system.pojo.entity.SysDictItem;
 import com.youlai.system.pojo.entity.SysDictType;
@@ -20,8 +21,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -147,25 +150,48 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
     public boolean deleteDictTypes(String idsStr) {
 
         Assert.isTrue(StrUtil.isNotBlank(idsStr), "删除数据为空");
-        //
-        List<Long> ids = Arrays.asList(idsStr.split(","))
+
+        List ids = Arrays.asList(idsStr.split(","))
                 .stream()
-                .map(id -> Long.parseLong(id))
                 .collect(Collectors.toList());
 
-        // 删除字典项
+        // 删除字典数据项
         List<String> dictTypeCodes = this.list(new LambdaQueryWrapper<SysDictType>()
                         .in(SysDictType::getId, ids)
                         .select(SysDictType::getCode))
-                .stream().map(dictType -> dictType.getCode())
+                .stream()
+                .map(dictType -> dictType.getCode())
                 .collect(Collectors.toList()
                 );
         if (CollectionUtil.isNotEmpty(dictTypeCodes)) {
-            dictItemService.remove(new LambdaQueryWrapper<SysDictItem>().in(SysDictItem::getTypeCode, dictTypeCodes));
+            dictItemService.remove(new LambdaQueryWrapper<SysDictItem>()
+                    .in(SysDictItem::getTypeCode, dictTypeCodes));
         }
         // 删除字典类型
         boolean result = this.removeByIds(ids);
         return result;
+    }
+
+    /**
+     * 获取字典类型的数据项
+     *
+     * @param typeCode
+     * @return
+     */
+    @Override
+    public List<Option> listItemsByTypeCode(String typeCode) {
+        // 数据字典项
+        List<SysDictItem> dictItems = dictItemService.list(new LambdaQueryWrapper<SysDictItem>()
+                .eq(SysDictItem::getTypeCode, typeCode)
+                .select(SysDictItem::getValue, SysDictItem::getName)
+        );
+
+        // 转换下拉数据
+        List<Option> options = CollectionUtil.emptyIfNull(dictItems)
+                .stream()
+                .map(dictItem -> new Option(dictItem.getValue(), dictItem.getName()))
+                .collect(Collectors.toList());
+        return options;
     }
 
 

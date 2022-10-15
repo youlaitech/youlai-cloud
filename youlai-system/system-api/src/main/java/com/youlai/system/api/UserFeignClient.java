@@ -1,6 +1,6 @@
 package com.youlai.system.api;
 
-import com.youlai.system.dto.UserAuthDTO;
+import com.youlai.system.dto.SysUserDetailsDTO;
 import com.youlai.common.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,5 +16,5 @@ public interface UserFeignClient {
      * @return
      */
     @GetMapping("/api/v1/users/username/{username}")
-    Result<UserAuthDTO> getUserByUsername(@PathVariable String username);
+    Result<SysUserDetailsDTO> getUserByUsername(@PathVariable String username);
 }

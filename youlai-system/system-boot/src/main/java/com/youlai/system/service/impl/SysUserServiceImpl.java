@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.youlai.system.converter.UserConverter;
-import com.youlai.system.dto.UserAuthDTO;
+import com.youlai.system.dto.SysUserDetailsDTO;
 import com.youlai.system.listener.UserImportListener;
 import com.youlai.system.mapper.SysUserMapper;
 import com.youlai.system.pojo.dto.UserImportDTO;
@@ -204,8 +204,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @return
      */
     @Override
-    public UserAuthDTO getAuthInfoByUsername(String username) {
-        UserAuthDTO userAuthInfo = this.baseMapper.getAuthInfoByUsername(username);
+    public SysUserDetailsDTO getAuthInfoByUsername(String username) {
+        SysUserDetailsDTO userAuthInfo = this.baseMapper.getAuthInfoByUsername(username);
         return userAuthInfo;
     }
 

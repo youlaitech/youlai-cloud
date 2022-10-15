@@ -102,7 +102,7 @@ public class SysMenuController {
     @PatchMapping("/{menuId}")
     public Result updateMenuVisible(
             @ApiParam(value = "菜单ID") @PathVariable Long menuId,
-            @ApiParam(value = "显示状态(1-显示；0-隐藏)") Integer visible
+            @ApiParam(value = "显示状态(1:显示;0:隐藏)") Integer visible
 
     ) {
         boolean result =menuService.updateMenuVisible(menuId, visible);

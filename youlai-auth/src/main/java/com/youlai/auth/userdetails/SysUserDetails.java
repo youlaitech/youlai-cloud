@@ -1,12 +1,11 @@
 package com.youlai.auth.userdetails;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.fasterxml.jackson.annotation.JacksonAnnotation;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.youlai.common.constant.GlobalConstants;
 import com.youlai.common.enums.PasswordEncoderTypeEnum;
-import com.youlai.system.dto.UserAuthDTO;
+import com.youlai.system.dto.SysUserDetailsDTO;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -54,7 +53,7 @@ public class SysUserDetails implements UserDetails {
     /**
      * 系统管理用户
      */
-    public SysUserDetails(UserAuthDTO user) {
+    public SysUserDetails(SysUserDetailsDTO user) {
         this.setUserId(user.getUserId());
         this.setUsername(user.getUsername());
         this.setDeptId(user.getDeptId());

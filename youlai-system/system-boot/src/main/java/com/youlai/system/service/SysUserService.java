@@ -3,7 +3,7 @@ package com.youlai.system.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.youlai.system.dto.UserAuthDTO;
+import com.youlai.system.dto.SysUserDetailsDTO;
 import com.youlai.system.pojo.dto.UserImportDTO;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.form.UserForm;
@@ -81,10 +81,10 @@ public interface SysUserService extends IService<SysUser> {
      * 根据用户名获取认证信息
      *
      * @param username 用户名
-     * @return {@link UserAuthDTO}
+     * @return {@link SysUserDetailsDTO}
      */
 
-    UserAuthDTO getAuthInfoByUsername(String username);
+    SysUserDetailsDTO getAuthInfoByUsername(String username);
 
     /**
      * 导入用户
