@@ -2,9 +2,9 @@ package com.youlai.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.youlai.system.dto.SysUserDetailsDTO;
 import com.youlai.system.pojo.entity.SysUser;
-import com.youlai.system.pojo.po.UserDetailPO;
+import com.youlai.system.pojo.po.UserAuthPO;
+import com.youlai.system.pojo.po.UserFormPO;
 import com.youlai.system.pojo.po.UserPO;
 import com.youlai.system.pojo.query.UserPageQuery;
 import com.youlai.system.pojo.vo.user.UserExportVO;
@@ -38,7 +38,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @param userId 用户ID
      * @return
      */
-    UserDetailPO getUserDetail(Long userId);
+    UserFormPO getUserDetail(Long userId);
 
     /**
      * 根据用户名获取认证信息
@@ -46,7 +46,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @param username
      * @return
      */
-    SysUserDetailsDTO getAuthInfoByUsername(String username);
+    UserAuthPO getUserAuthInfo(String username);
 
     /**
      * 获取导出用户列表

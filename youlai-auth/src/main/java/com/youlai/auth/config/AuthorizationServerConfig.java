@@ -7,8 +7,11 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.youlai.auth.jose.Jwks;
-import com.youlai.auth.password.PasswordAuthenticationConverter;
-import com.youlai.auth.password.PasswordAuthenticationProvider;
+import com.youlai.auth.oauth2.customizer.JwtCustomizer;
+import com.youlai.auth.oauth2.customizer.JwtCustomizerHandler;
+import com.youlai.auth.oauth2.customizer.impl.JwtCustomizerImpl;
+import com.youlai.auth.oauth2.password.UsernamePasswordAuthenticationConverter;
+import com.youlai.auth.oauth2.password.UsernamePasswordAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -38,6 +41,8 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.security.oauth2.server.authorization.web.authentication.DelegatingAuthenticationConverter;
 import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2AuthorizationCodeAuthenticationConverter;
@@ -72,7 +77,7 @@ public class AuthorizationServerConfig {
                                 new OAuth2AuthorizationCodeAuthenticationConverter(),
                                 new OAuth2RefreshTokenAuthenticationConverter(),
                                 new OAuth2ClientCredentialsAuthenticationConverter(),
-                                new PasswordAuthenticationConverter()
+                                new UsernamePasswordAuthenticationConverter()
                         )))
         ));
 
@@ -96,10 +101,10 @@ public class AuthorizationServerConfig {
 
 
         // 密码模式
-        PasswordAuthenticationProvider passwordAuthenticationProvider=new PasswordAuthenticationProvider(authenticationManager,
+        UsernamePasswordAuthenticationProvider usernamePasswordAuthenticationProvider =new UsernamePasswordAuthenticationProvider(authenticationManager,
                 authorizationService,
                 tokenGenerator);
-        http.authenticationProvider(passwordAuthenticationProvider);
+        http.authenticationProvider(usernamePasswordAuthenticationProvider);
 
         return securityFilterChain;
     }
@@ -200,4 +205,15 @@ public class AuthorizationServerConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> buildJwtCustomizer() {
+
+        JwtCustomizerHandler jwtCustomizerHandler = JwtCustomizerHandler.getJwtCustomizerHandler();
+        JwtCustomizer jwtCustomizer = new JwtCustomizerImpl(jwtCustomizerHandler);
+        OAuth2TokenCustomizer<JwtEncodingContext> customizer = (context) -> {
+            jwtCustomizer.customizeToken(context);
+        };
+
+        return customizer;
+    }
 }

@@ -1,4 +1,4 @@
-package com.youlai.auth.password;
+package com.youlai.auth.oauth2.password;
 
 import com.youlai.auth.util.OAuth2EndpointUtils;
 import org.springframework.security.core.Authentication;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  *
  * @see org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2AuthorizationCodeAuthenticationConverter
  */
-public class PasswordAuthenticationConverter implements AuthenticationConverter {
+public class UsernamePasswordAuthenticationConverter implements AuthenticationConverter {
 
     @Override
     public Authentication convert(HttpServletRequest request) {
@@ -82,7 +82,7 @@ public class PasswordAuthenticationConverter implements AuthenticationConverter 
                         !e.getKey().equals(OAuth2ParameterNames.SCOPE))
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get(0)));
 
-        PasswordAuthenticationToken passwordAuthentication = new PasswordAuthenticationToken(AuthorizationGrantType.PASSWORD, clientPrincipal, requestedScopes, additionalParameters);
+        UsernamePasswordAuthenticationToken passwordAuthentication = new UsernamePasswordAuthenticationToken(AuthorizationGrantType.PASSWORD, clientPrincipal, requestedScopes, additionalParameters);
 
         return passwordAuthentication;
     }

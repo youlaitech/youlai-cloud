@@ -42,7 +42,7 @@
     </select>
 
     <!-- 用户表单信息映射 -->
-    <resultMap id="UserFormMap" type="com.youlai.system.pojo.po.UserDetailPO">
+    <resultMap id="UserFormMap" type="com.youlai.system.pojo.po.UserFormPO">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
@@ -77,7 +77,7 @@
     </select>
 
     <!-- 用户认证信息映射 -->
-    <resultMap id="AuthUserMap" type="com.youlai.system.dto.SysUserDetailsDTO">
+    <resultMap id="UserAuthMap" type="com.youlai.system.pojo.po.UserAuthPO">
         <id property="userId" column="userId" jdbcType="BIGINT"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
@@ -89,7 +89,7 @@
     </resultMap>
 
     <!-- 根据用户名获取认证信息 -->
-    <select id="getAuthInfoByUsername" resultMap="AuthUserMap">
+    <select id="getUserAuthInfo" resultMap="UserAuthMap">
         SELECT
             t1.id userId,
             t1.username,

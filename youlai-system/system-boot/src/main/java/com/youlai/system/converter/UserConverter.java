@@ -1,12 +1,13 @@
 package com.youlai.system.converter;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.youlai.security.userdetails.UserAuthInfo;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.form.UserForm;
-import com.youlai.system.pojo.po.UserDetailPO;
+import com.youlai.system.pojo.po.UserAuthPO;
+import com.youlai.system.pojo.po.UserFormPO;
 import com.youlai.system.pojo.po.UserPO;
 import com.youlai.system.pojo.vo.user.LoginUserVO;
-import com.youlai.system.pojo.vo.user.UserDetailVO;
 import com.youlai.system.pojo.vo.user.UserVO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -29,7 +30,7 @@ public interface UserConverter {
 
     Page<UserVO> po2Vo(Page<UserPO> po);
 
-    UserDetailVO po2Vo(UserDetailPO po);
+    UserForm po2Form(UserFormPO po);
 
     UserForm entity2Form(SysUser entity);
 
@@ -40,4 +41,8 @@ public interface UserConverter {
             @Mapping(target = "userId", source = "id")
     })
     LoginUserVO entity2LoginUser(SysUser entity);
+
+
+    UserAuthInfo po2AuthDto(UserAuthPO userAuthPO);
+
 }

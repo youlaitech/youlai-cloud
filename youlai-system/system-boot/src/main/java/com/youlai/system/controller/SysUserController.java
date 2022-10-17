@@ -4,18 +4,17 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.youlai.system.dto.SysUserDetailsDTO;
+import com.youlai.common.result.PageResult;
+import com.youlai.common.result.Result;
+import com.youlai.security.userdetails.UserAuthInfo;
 import com.youlai.system.pojo.dto.UserImportDTO;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.form.UserForm;
 import com.youlai.system.pojo.query.UserPageQuery;
 import com.youlai.system.pojo.vo.user.LoginUserVO;
-import com.youlai.system.pojo.vo.user.UserDetailVO;
 import com.youlai.system.pojo.vo.user.UserExportVO;
 import com.youlai.system.pojo.vo.user.UserVO;
 import com.youlai.system.service.SysUserService;
-import com.youlai.common.result.PageResult;
-import com.youlai.common.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +35,7 @@ import java.util.List;
  * 用户控制器
  *
  * @author haoxr
- * @date 2022/1/15 10:25
+ * @date 2022/10/16
  */
 @Api(tags = "用户管理")
 @RestController
@@ -52,16 +52,20 @@ public class SysUserController {
         return PageResult.success(result);
     }
 
-    @ApiOperation(value = "用户详情")
-    @GetMapping("/{userId}")
-    public Result<UserDetailVO> getUserDetail(@ApiParam(value = "用户ID") @PathVariable Long userId) {
-        UserDetailVO userDetail = userService.getUserDetail(userId);
-        return Result.success(userDetail);
+    @ApiOperation(value = "用户表单数据")
+    @GetMapping("/{userId}/form")
+    public Result<UserForm> getUserDetail(
+            @ApiParam(value = "用户ID") @PathVariable Long userId
+    ) {
+        UserForm formData = userService.getUserFormData(userId);
+        return Result.success(formData);
     }
 
     @ApiOperation(value = "新增用户")
     @PostMapping
-    public Result saveUser(@RequestBody @Validated UserForm userForm) {
+    public Result saveUser(
+            @RequestBody @Valid UserForm userForm
+    ) {
         boolean result = userService.saveUser(userForm);
         return Result.judge(result);
     }
@@ -112,10 +116,10 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "根据用户名获取认证信息", notes = "提供用于用户登录认证信息", hidden = true)
-    @GetMapping("/username/{username}")
-    public Result<SysUserDetailsDTO> getAuthInfoByUsername(@ApiParam("用户名") @PathVariable String username) {
-        SysUserDetailsDTO user = userService.getAuthInfoByUsername(username);
-        return Result.success(user);
+    @GetMapping("/{username}/authInfo")
+    public Result<UserAuthInfo> getUserAuthInfo(@ApiParam("用户名") @PathVariable String username) {
+        UserAuthInfo userAUthInfo = userService.getUserAuthInfo(username);
+        return Result.success(userAUthInfo);
     }
 
     @ApiOperation("用户导入模板下载")

@@ -13,27 +13,27 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import com.youlai.common.base.IBaseEnum;
+import com.youlai.common.constant.SystemConstants;
+import com.youlai.common.enums.GenderEnum;
+import com.youlai.security.util.SecurityUtils;
 import com.youlai.system.converter.UserConverter;
-import com.youlai.system.dto.SysUserDetailsDTO;
+import com.youlai.security.userdetails.UserAuthInfo;
 import com.youlai.system.listener.UserImportListener;
 import com.youlai.system.mapper.SysUserMapper;
 import com.youlai.system.pojo.dto.UserImportDTO;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.entity.SysUserRole;
 import com.youlai.system.pojo.form.UserForm;
-import com.youlai.system.pojo.po.UserDetailPO;
+import com.youlai.system.pojo.po.UserAuthPO;
+import com.youlai.system.pojo.po.UserFormPO;
 import com.youlai.system.pojo.po.UserPO;
 import com.youlai.system.pojo.query.UserPageQuery;
 import com.youlai.system.pojo.vo.user.LoginUserVO;
-import com.youlai.system.pojo.vo.user.UserDetailVO;
 import com.youlai.system.pojo.vo.user.UserExportVO;
 import com.youlai.system.pojo.vo.user.UserVO;
 import com.youlai.system.service.SysUserRoleService;
 import com.youlai.system.service.SysUserService;
-import com.youlai.common.base.IBaseEnum;
-import com.youlai.common.constant.SystemConstants;
-import com.youlai.common.enums.GenderEnum;
-import com.youlai.system.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -92,11 +92,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @return
      */
     @Override
-    public UserDetailVO getUserDetail(Long userId) {
-        UserDetailPO userDetailPO = this.baseMapper.getUserDetail(userId);
+    public UserForm getUserFormData(Long userId) {
+        UserFormPO userFormPO = this.baseMapper.getUserDetail(userId);
         // 实体转换po->form
-        UserDetailVO userDetailVO = userConverter.po2Vo(userDetailPO);
-        return userDetailVO;
+        UserForm userForm = userConverter.po2Form(userFormPO);
+        return userForm;
     }
 
     /**
@@ -145,7 +145,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         long count = this.count(new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getUsername, username)
-                .ne(SysUser::getId,userId)
+                .ne(SysUser::getId, userId)
         );
         Assert.isTrue(count == 0, "用户名已存在");
 
@@ -204,8 +204,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @return
      */
     @Override
-    public SysUserDetailsDTO getAuthInfoByUsername(String username) {
-        SysUserDetailsDTO userAuthInfo = this.baseMapper.getAuthInfoByUsername(username);
+    public UserAuthInfo getUserAuthInfo(String username) {
+        UserAuthPO userAuthPO = this.baseMapper.getUserAuthInfo(username);
+        UserAuthInfo userAuthInfo = userConverter.po2AuthDto(userAuthPO);
         return userAuthInfo;
     }
 
@@ -220,7 +221,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public String importUsers(UserImportDTO userImportDTO) throws IOException {
 
         Long deptId = userImportDTO.getDeptId();
-        List<Long> roleIds = Arrays.stream(userImportDTO.getRoleIds().split(",")).map(roleId -> Convert.toLong(roleId)).collect(Collectors.toList());
+        List<Long> roleIds = Arrays.stream(userImportDTO.getRoleIds().split(","))
+                .map(roleId -> Convert.toLong(roleId))
+                .collect(Collectors.toList());
         InputStream inputStream = userImportDTO.getFile().getInputStream();
 
         ExcelReaderBuilder excelReaderBuilder = EasyExcel.read(inputStream, UserImportDTO.UserItem.class, userImportListener);
@@ -331,7 +334,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         LoginUserVO loginUserVO = userConverter.entity2LoginUser(user);
 
         // 用户角色集合
-        Set<String> roles = SecurityUtils.getAuthorities();
+        Set<String> roles = SecurityUtils.getRoles();
         loginUserVO.setRoles(roles);
 
         return loginUserVO;

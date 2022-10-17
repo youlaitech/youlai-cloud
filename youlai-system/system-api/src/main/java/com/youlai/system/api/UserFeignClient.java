@@ -1,7 +1,8 @@
 package com.youlai.system.api;
 
-import com.youlai.system.dto.SysUserDetailsDTO;
 import com.youlai.common.result.Result;
+import com.youlai.security.userdetails.SysUserDetails;
+import com.youlai.security.userdetails.UserAuthInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,6 @@ public interface UserFeignClient {
      * @param username
      * @return
      */
-    @GetMapping("/api/v1/users/username/{username}")
-    Result<SysUserDetailsDTO> getUserByUsername(@PathVariable String username);
+    @GetMapping("/api/v1/users/{username}/authInfo")
+    Result<UserAuthInfo> getUserByUsername(@PathVariable String username);
 }

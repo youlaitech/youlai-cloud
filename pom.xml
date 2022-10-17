@@ -27,7 +27,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- spring boot -->
-        <spring-boot.version>2.7.2</spring-boot.version>
+        <spring-boot.version>2.7.3</spring-boot.version>
 
         <!-- spring cloud -->
         <spring-cloud.version>2021.0.4</spring-cloud.version>
@@ -69,6 +69,7 @@
         <okhttp3.version>4.8.1</okhttp3.version>
 
         <authorization-server.version>0.3.1</authorization-server.version>
+        <nimbus-jose-jwt.version>9.16.1</nimbus-jose-jwt.version>
     </properties>
 
 
@@ -236,6 +237,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.youlai</groupId>
+                <artifactId>common-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.github.whvcse</groupId>
                 <artifactId>easy-captcha</artifactId>
                 <version>${easy-captcha.version}</version>
@@ -270,13 +277,6 @@
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-jdk8</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
@@ -306,6 +306,12 @@
                 <groupId>com.youlai</groupId>
                 <artifactId>system-api</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose-jwt.version}</version>
             </dependency>
 
         </dependencies>

@@ -1,4 +1,4 @@
-package com.youlai.auth.password;
+package com.youlai.auth.oauth2.password;
 
 import cn.hutool.core.lang.Assert;
 import io.reactivex.rxjava3.annotations.Nullable;
@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 
 import java.util.*;
 
-public class PasswordAuthenticationToken extends AbstractAuthenticationToken {
+public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = -6067207202119450764L;
 
     private final AuthorizationGrantType authorizationGrantType;
@@ -22,8 +22,8 @@ public class PasswordAuthenticationToken extends AbstractAuthenticationToken {
      * @param clientPrincipal the authenticated client principal
      */
 
-    public PasswordAuthenticationToken(AuthorizationGrantType authorizationGrantType,
-                                       Authentication clientPrincipal, @Nullable Set<String> scopes, @Nullable Map<String, Object> additionalParameters) {
+    public UsernamePasswordAuthenticationToken(AuthorizationGrantType authorizationGrantType,
+                                               Authentication clientPrincipal, @Nullable Set<String> scopes, @Nullable Map<String, Object> additionalParameters) {
         super(Collections.emptyList());
         Assert.notNull(authorizationGrantType, "authorizationGrantType cannot be null");
         Assert.notNull(clientPrincipal, "clientPrincipal cannot be null");

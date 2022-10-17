@@ -3,13 +3,12 @@ package com.youlai.system.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.youlai.system.dto.SysUserDetailsDTO;
+import com.youlai.security.userdetails.UserAuthInfo;
 import com.youlai.system.pojo.dto.UserImportDTO;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.form.UserForm;
 import com.youlai.system.pojo.query.UserPageQuery;
 import com.youlai.system.pojo.vo.user.LoginUserVO;
-import com.youlai.system.pojo.vo.user.UserDetailVO;
 import com.youlai.system.pojo.vo.user.UserExportVO;
 import com.youlai.system.pojo.vo.user.UserVO;
 
@@ -33,12 +32,12 @@ public interface SysUserService extends IService<SysUser> {
 
 
     /**
-     * 获取用户详情
+     * 获取用户表单数据
      *
      * @param userId
      * @return
      */
-    UserDetailVO getUserDetail(Long userId);
+    UserForm getUserFormData(Long userId);
 
 
     /**
@@ -81,10 +80,10 @@ public interface SysUserService extends IService<SysUser> {
      * 根据用户名获取认证信息
      *
      * @param username 用户名
-     * @return {@link SysUserDetailsDTO}
+     * @return {@link UserAuthInfo}
      */
 
-    SysUserDetailsDTO getAuthInfoByUsername(String username);
+    UserAuthInfo getUserAuthInfo(String username);
 
     /**
      * 导入用户

@@ -1,59 +1,36 @@
-package com.youlai.auth.userdetails;
+package com.youlai.security.userdetails;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.youlai.common.constant.GlobalConstants;
 import com.youlai.common.enums.PasswordEncoderTypeEnum;
-import com.youlai.system.dto.SysUserDetailsDTO;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 
 /**
  * 系统管理用户认证信息
  *
- * @author <a href="mailto:xianrui0365@163.com">haoxr</a>
- * @date 2021/9/27
+ * @author haoxr
+ * @date 2022/10/16
  */
 @Data
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
-@JsonIgnoreProperties({"accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
-public class SysUserDetails implements UserDetails {
-
-    public SysUserDetails(){
-
-    }
-
-    /**
-     * 扩展字段：用户ID
-     */
-    private Long userId;
-
-
-    /**
-     * 扩展字段：部门ID
-     */
-    private Long deptId;
-
-    /**
-     * 默认字段
-     */
-    private String username;
-    private String password;
-    private Boolean enabled;
-
-    private Collection<? extends GrantedAuthority> authorities;
+public class SysUserDetails implements UserDetails, Serializable {
 
     /**
      * 系统管理用户
      */
-    public SysUserDetails(SysUserDetailsDTO user) {
+    public SysUserDetails(UserAuthInfo user) {
         this.setUserId(user.getUserId());
         this.setUsername(user.getUsername());
         this.setDeptId(user.getDeptId());
@@ -65,11 +42,18 @@ public class SysUserDetails implements UserDetails {
         }
     }
 
+    @Getter
+    @Setter
+    private Long userId;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
+    @Getter
+    @Setter
+    private Long deptId;
+    private String username;
+    private String password;
+    private Boolean enabled;
+
+    private Collection<? extends GrantedAuthority> authorities;
 
     @Override
     public String getPassword() {

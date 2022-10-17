@@ -33,14 +33,17 @@ public class UserAuthPO {
      */
     private Integer status;
 
-    /**
-     * 用户角色编码集合 ["ROOT","ADMIN"]
-     */
-    private List<String> roles;
 
     /**
      * 部门ID
      */
     private Long deptId;
+
+
+    /**
+     * 用户角色编码集合 ["ROOT","ADMIN"]
+     */
+    private List<String> roles;
+
 
 }

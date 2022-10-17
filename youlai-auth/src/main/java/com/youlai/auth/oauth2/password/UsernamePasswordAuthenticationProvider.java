@@ -1,10 +1,9 @@
-package com.youlai.auth.password;
+package com.youlai.auth.oauth2.password;
 
 import cn.hutool.core.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.*;
@@ -28,7 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class PasswordAuthenticationProvider implements AuthenticationProvider {
+public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 
 
     private static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-5.2";
@@ -44,8 +43,10 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
      * @param tokenGenerator the token generator
      * @since 0.2.3
      */
-    public PasswordAuthenticationProvider(AuthenticationManager authenticationManager,
-                                          OAuth2AuthorizationService authorizationService, OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
+    public UsernamePasswordAuthenticationProvider(AuthenticationManager authenticationManager,
+                                                  OAuth2AuthorizationService authorizationService,
+                                                  OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator
+    ) {
         Assert.notNull(authorizationService, "authorizationService cannot be null");
         Assert.notNull(tokenGenerator, "tokenGenerator cannot be null");
         this.authenticationManager = authenticationManager;
@@ -56,7 +57,7 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        PasswordAuthenticationToken passwordAuthentication = (PasswordAuthenticationToken) authentication;
+        UsernamePasswordAuthenticationToken passwordAuthentication = (UsernamePasswordAuthenticationToken) authentication;
 
         OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(passwordAuthentication);
 
@@ -151,18 +152,18 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        boolean supports = PasswordAuthenticationToken.class.isAssignableFrom(authentication);
+        boolean supports = UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
         return supports;
     }
 
-    private Authentication getUsernamePasswordAuthentication(PasswordAuthenticationToken passwordAuthentication) {
+    private Authentication getUsernamePasswordAuthentication(UsernamePasswordAuthenticationToken passwordAuthentication) {
 
         Map<String, Object> additionalParameters = passwordAuthentication.getAdditionalParameters();
 
         String username = (String) additionalParameters.get(OAuth2ParameterNames.USERNAME);
         String password = (String) additionalParameters.get(OAuth2ParameterNames.PASSWORD);
 
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        org.springframework.security.authentication.UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(username, password);
         log.debug("got usernamePasswordAuthenticationToken=" + usernamePasswordAuthenticationToken);
 
         Authentication usernamePasswordAuthentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
