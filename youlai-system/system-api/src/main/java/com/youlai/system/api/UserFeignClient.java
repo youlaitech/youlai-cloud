@@ -1,8 +1,7 @@
 package com.youlai.system.api;
 
 import com.youlai.common.result.Result;
-import com.youlai.security.userdetails.SysUserDetails;
-import com.youlai.security.userdetails.UserAuthInfo;
+import com.youlai.system.dto.UserAuthInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

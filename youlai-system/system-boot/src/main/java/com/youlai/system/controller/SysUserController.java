@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.youlai.common.result.PageResult;
 import com.youlai.common.result.Result;
-import com.youlai.security.userdetails.UserAuthInfo;
+import com.youlai.system.dto.UserAuthInfo;
 import com.youlai.system.pojo.dto.UserImportDTO;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.form.UserForm;
@@ -37,7 +37,7 @@ import java.util.List;
  * @author haoxr
  * @date 2022/10/16
  */
-@Api(tags = "用户管理")
+@Api(tags = "用户接口")
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor

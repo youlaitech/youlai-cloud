@@ -1,8 +1,7 @@
-package com.youlai.auth.service;
+package com.youlai.auth.userdetails;
 
 import com.youlai.common.result.ResultCode;
-import com.youlai.security.userdetails.SysUserDetails;
-import com.youlai.security.userdetails.UserAuthInfo;
+import com.youlai.system.dto.UserAuthInfo;
 import com.youlai.system.api.UserFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

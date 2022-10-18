@@ -18,7 +18,7 @@ import com.youlai.common.constant.SystemConstants;
 import com.youlai.common.enums.GenderEnum;
 import com.youlai.security.util.SecurityUtils;
 import com.youlai.system.converter.UserConverter;
-import com.youlai.security.userdetails.UserAuthInfo;
+import com.youlai.system.dto.UserAuthInfo;
 import com.youlai.system.listener.UserImportListener;
 import com.youlai.system.mapper.SysUserMapper;
 import com.youlai.system.pojo.dto.UserImportDTO;
@@ -335,6 +335,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         // 用户角色集合
         Set<String> roles = SecurityUtils.getRoles();
+        Long userId = SecurityUtils.getUserId();
+        Long deptId = SecurityUtils.getDeptId();
         loginUserVO.setRoles(roles);
 
         return loginUserVO;

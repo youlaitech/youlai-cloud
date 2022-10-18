@@ -1,4 +1,4 @@
-package com.youlai.security.userdetails;
+package com.youlai.system.dto;
 
 import lombok.Data;
 

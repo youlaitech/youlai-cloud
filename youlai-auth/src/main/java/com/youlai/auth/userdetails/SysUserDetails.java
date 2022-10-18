@@ -1,10 +1,10 @@
-package com.youlai.security.userdetails;
+package com.youlai.auth.userdetails;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.youlai.common.constant.GlobalConstants;
 import com.youlai.common.enums.PasswordEncoderTypeEnum;
+import com.youlai.system.dto.UserAuthInfo;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

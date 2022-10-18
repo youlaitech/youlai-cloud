@@ -1,7 +1,7 @@
 package com.youlai.system.converter;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.youlai.security.userdetails.UserAuthInfo;
+import com.youlai.system.dto.UserAuthInfo;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.form.UserForm;
 import com.youlai.system.pojo.po.UserAuthPO;
