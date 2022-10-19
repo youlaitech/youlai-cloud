@@ -29,7 +29,7 @@ import com.youlai.system.pojo.po.UserAuthPO;
 import com.youlai.system.pojo.po.UserFormPO;
 import com.youlai.system.pojo.po.UserPO;
 import com.youlai.system.pojo.query.UserPageQuery;
-import com.youlai.system.pojo.vo.user.LoginUserVO;
+import com.youlai.system.pojo.vo.user.UserLoginVO;
 import com.youlai.system.pojo.vo.user.UserExportVO;
 import com.youlai.system.pojo.vo.user.UserVO;
 import com.youlai.system.service.SysUserRoleService;
@@ -320,7 +320,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @return
      */
     @Override
-    public LoginUserVO getLoginUserInfo() {
+    public UserLoginVO getLoginUserInfo() {
         // 登录用户entity
         SysUser user = this.getOne(new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getUsername, SecurityUtils.getUsername())
@@ -331,15 +331,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 )
         );
         // entity->VO
-        LoginUserVO loginUserVO = userConverter.entity2LoginUser(user);
+        UserLoginVO userLoginVO = userConverter.entity2LoginUser(user);
 
         // 用户角色集合
         Set<String> roles = SecurityUtils.getRoles();
-        Long userId = SecurityUtils.getUserId();
-        Long deptId = SecurityUtils.getDeptId();
-        loginUserVO.setRoles(roles);
-
-        return loginUserVO;
+        userLoginVO.setRoles(roles);
+        return userLoginVO;
     }
 
 

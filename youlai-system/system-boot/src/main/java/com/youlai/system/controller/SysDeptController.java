@@ -45,12 +45,12 @@ public class SysDeptController {
     }
 
     @ApiOperation(value = "获取部门详情")
-    @GetMapping("/{deptId}")
-    public Result<DeptDetailVO> getDeptDetail(
+    @GetMapping("/{deptId}/form")
+    public Result<DeptForm> getDeptForm(
             @ApiParam("部门ID") @PathVariable Long deptId
     ) {
-        DeptDetailVO deptDetail = deptService.getDeptDetail(deptId);
-        return Result.success(deptDetail);
+        DeptForm deptForm = deptService.getDeptForm(deptId);
+        return Result.success(deptForm);
     }
 
     @ApiOperation(value = "新增部门")

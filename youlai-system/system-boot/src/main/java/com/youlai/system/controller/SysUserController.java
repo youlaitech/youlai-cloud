@@ -11,7 +11,7 @@ import com.youlai.system.pojo.dto.UserImportDTO;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.form.UserForm;
 import com.youlai.system.pojo.query.UserPageQuery;
-import com.youlai.system.pojo.vo.user.LoginUserVO;
+import com.youlai.system.pojo.vo.user.UserLoginVO;
 import com.youlai.system.pojo.vo.user.UserExportVO;
 import com.youlai.system.pojo.vo.user.UserVO;
 import com.youlai.system.service.SysUserService;
@@ -110,9 +110,9 @@ public class SysUserController {
 
     @ApiOperation(value = "获取登录用户信息")
     @GetMapping("/me")
-    public Result<LoginUserVO> getLoginUserInfo() {
-        LoginUserVO loginUserVO = userService.getLoginUserInfo();
-        return Result.success(loginUserVO);
+    public Result<UserLoginVO> getLoginUserInfo() {
+        UserLoginVO userLoginVO = userService.getLoginUserInfo();
+        return Result.success(userLoginVO);
     }
 
     @ApiOperation(value = "根据用户名获取认证信息", notes = "提供用于用户登录认证信息", hidden = true)

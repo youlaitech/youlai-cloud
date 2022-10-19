@@ -8,7 +8,7 @@ import com.youlai.system.pojo.dto.UserImportDTO;
 import com.youlai.system.pojo.entity.SysUser;
 import com.youlai.system.pojo.form.UserForm;
 import com.youlai.system.pojo.query.UserPageQuery;
-import com.youlai.system.pojo.vo.user.LoginUserVO;
+import com.youlai.system.pojo.vo.user.UserLoginVO;
 import com.youlai.system.pojo.vo.user.UserExportVO;
 import com.youlai.system.pojo.vo.user.UserVO;
 
@@ -107,5 +107,5 @@ public interface SysUserService extends IService<SysUser> {
      *
      * @return
      */
-    LoginUserVO getLoginUserInfo();
+    UserLoginVO getLoginUserInfo();
 }

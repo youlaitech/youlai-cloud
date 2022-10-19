@@ -7,7 +7,7 @@ import com.youlai.system.pojo.form.UserForm;
 import com.youlai.system.pojo.po.UserAuthPO;
 import com.youlai.system.pojo.po.UserFormPO;
 import com.youlai.system.pojo.po.UserPO;
-import com.youlai.system.pojo.vo.user.LoginUserVO;
+import com.youlai.system.pojo.vo.user.UserLoginVO;
 import com.youlai.system.pojo.vo.user.UserVO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -40,7 +40,7 @@ public interface UserConverter {
     @Mappings({
             @Mapping(target = "userId", source = "id")
     })
-    LoginUserVO entity2LoginUser(SysUser entity);
+    UserLoginVO entity2LoginUser(SysUser entity);
 
 
     UserAuthInfo po2AuthDto(UserAuthPO userAuthPO);

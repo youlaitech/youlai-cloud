@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 登录用户视图层对象
+ * 用户登录视图对象
  *
  * @author haoxr
  * @date 2022/1/14
  */
 @ApiModel("当前登录用户视图对象")
 @Data
-public class LoginUserVO {
+public class UserLoginVO {
 
     @ApiModelProperty("用户ID")
     private Long userId;

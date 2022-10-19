@@ -62,5 +62,5 @@ public interface SysDeptService extends IService<SysDept> {
      * @param deptId
      * @return
      */
-    DeptDetailVO getDeptDetail(Long deptId);
+    DeptForm getDeptForm(Long deptId);
 }
