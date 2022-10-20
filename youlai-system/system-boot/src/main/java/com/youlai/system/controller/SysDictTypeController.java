@@ -65,10 +65,10 @@ public class SysDictTypeController {
 
     @ApiOperation(value = "获取字典类型的数据项")
     @GetMapping("/{typeCode}/items")
-    public Result<List<Option>> listItemsByTypeCode(
-            @ApiParam("字典类型编码") @RequestParam String typeCode
+    public Result<List<Option>> listDictItemsByTypeCode(
+            @ApiParam("字典类型编码") @PathVariable String typeCode
     ) {
-        List<Option> list = dictTypeService.listItemsByTypeCode(typeCode);
+        List<Option> list = dictTypeService.listDictItemsByTypeCode(typeCode);
         return Result.success(list);
     }
 }

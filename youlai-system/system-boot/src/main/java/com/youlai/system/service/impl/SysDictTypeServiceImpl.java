@@ -179,7 +179,7 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
      * @return
      */
     @Override
-    public List<Option> listItemsByTypeCode(String typeCode) {
+    public List<Option> listDictItemsByTypeCode(String typeCode) {
         // 数据字典项
         List<SysDictItem> dictItems = dictItemService.list(new LambdaQueryWrapper<SysDictItem>()
                 .eq(SysDictItem::getTypeCode, typeCode)

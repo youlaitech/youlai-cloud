@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.youlai.security.util.SecurityUtils;
 import com.youlai.system.converter.RoleConverter;
 import com.youlai.system.mapper.SysRoleMapper;
 import com.youlai.system.pojo.entity.SysRole;
@@ -59,14 +60,15 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         String keywords = queryParams.getKeywords();
 
         // 查询数据
-        Page<SysRole> rolePage = this.page(
-                new Page<>(pageNum, pageSize),
+        Page<SysRole> rolePage = this.page(new Page<>(pageNum, pageSize),
                 new LambdaQueryWrapper<SysRole>()
-                        .like(StrUtil.isNotBlank(keywords), SysRole::getName, keywords)
-                        .or()
-                        .like(StrUtil.isNotBlank(keywords), SysRole::getCode, keywords)
-                        .ne(!UserUtils.isRoot(), SysRole::getCode, GlobalConstants.ROOT_ROLE_CODE) // 非超级管理员不显示超级管理员角色
-                        .select(SysRole::getId, SysRole::getName, SysRole::getCode)
+                        .and(StrUtil.isNotBlank(keywords),
+                                wrapper ->
+                                        wrapper.like(StrUtil.isNotBlank(keywords), SysRole::getName, keywords)
+                                                .or()
+                                                .like(StrUtil.isNotBlank(keywords), SysRole::getCode, keywords)
+                        )
+                        .ne(!SecurityUtils.isRoot(), SysRole::getCode, GlobalConstants.ROOT_ROLE_CODE) // 非超级管理员不显示超级管理员角色
         );
 
         // 实体转换
