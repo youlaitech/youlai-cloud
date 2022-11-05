@@ -1,11 +1,8 @@
 
 package com.youlai.common.web.config;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import feign.Logger;
 import feign.RequestInterceptor;
 import feign.codec.Decoder;
@@ -20,7 +17,6 @@ import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -38,7 +34,7 @@ import java.util.Enumeration;
  */
 
 @AutoConfiguration
-public class FeignAutoConfiguration {
+public class FeignConfig {
     /**
      * 让DispatcherServlet向子线程传递RequestContext
      *

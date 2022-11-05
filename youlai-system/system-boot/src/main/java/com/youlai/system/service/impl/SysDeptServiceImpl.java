@@ -82,12 +82,11 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
                     .collect(Collectors.toList());
         }
 
-
         return list;
     }
 
     /**
-     * 递归生成部门表格层级列表
+     * 递归生成部门层级列表
      *
      * @param parentId
      * @param deptList

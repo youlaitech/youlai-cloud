@@ -1,2 +1,2 @@
-com.youlai.common.web.config.FeignAutoConfiguration
-com.youlai.common.web.config.WebMvcAutoConfiguration
+com.youlai.common.web.config.FeignConfig
+com.youlai.common.web.config.WebMvcConfig

@@ -52,8 +52,8 @@ public class SecurityUtils {
      * 获取部门ID
      */
     public static Long getDeptId() {
-        Long userId = Convert.toLong(getTokenAttributes().get("deptId"));
-        return userId;
+        Long deptId = Convert.toLong(getTokenAttributes().get("deptId"));
+        return deptId;
     }
 
     public static boolean isRoot() {
