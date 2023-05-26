@@ -6,7 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * 密码编码器
+ * @author haoxr
+ * @since 2023/5/26
  */
 @Configuration
 public class PasswordEncoderConfig {

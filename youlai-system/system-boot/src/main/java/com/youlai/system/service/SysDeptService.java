@@ -4,9 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.youlai.system.pojo.entity.SysDept;
 import com.youlai.system.pojo.form.DeptForm;
 import com.youlai.system.pojo.query.DeptQuery;
-import com.youlai.system.pojo.vo.dept.DeptDetailVO;
-import com.youlai.system.pojo.vo.dept.DeptVO;
-import com.youlai.common.web.domain.Option;
+import com.youlai.system.pojo.vo.DeptVO;
+import com.youlai.system.pojo.vo.Option;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public interface SysDeptService extends IService<SysDept> {
      *
      * @return
      */
-    List<Option> listDepartmentOptions();
+    List<Option> listDeptOptions();
 
     /**
      * 新增部门

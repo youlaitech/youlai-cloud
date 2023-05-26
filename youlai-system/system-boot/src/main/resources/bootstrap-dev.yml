@@ -9,23 +9,24 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:9000
+          jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
+
   cloud:
     nacos:
       # 注册中心
       discovery:
         server-addr: http://localhost:8848
-        namespace: cloud-namespace-id
+        username: nacos
+        password: nacos
       # 配置中心
       config:
         server-addr: http://localhost:8848
-        namespace: cloud-namespace-id
         file-extension: yaml
         shared-configs[0]:
           data-id: youlai-common.yaml
-          namespace: cloud-namespace-id
           refresh: true
-
+        username: nacos
+        password: nacos
 
 logging:
   level:

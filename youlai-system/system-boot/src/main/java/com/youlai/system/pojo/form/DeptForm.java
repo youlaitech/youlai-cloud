@@ -1,27 +1,27 @@
 package com.youlai.system.pojo.form;
 
-import com.youlai.common.base.BaseEntity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-
-@ApiModel("部门表单对象")
+@Schema(description = "部门表单对象")
 @Data
-public class DeptForm extends BaseEntity {
+public class DeptForm {
 
-    @ApiModelProperty("部门名称")
+    @Schema(description="部门ID")
+    private Long id;
+
+    @Schema(description="部门名称")
     private String name;
 
-    @ApiModelProperty("父部门ID")
+    @Schema(description="父部门ID")
     @NotNull(message = "父部门ID不能为空")
     private Long parentId;
 
-    @ApiModelProperty("状态")
+    @Schema(description="状态(1:启用;0:禁用)")
     private Integer status;
 
-    @ApiModelProperty("排序")
+    @Schema(description="排序(数字越小排名越靠前)")
     private Integer sort;
 
 }

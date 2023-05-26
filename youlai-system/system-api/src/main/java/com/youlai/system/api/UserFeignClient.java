@@ -12,7 +12,7 @@ public interface UserFeignClient {
     /**
      * 获取用户认证凭证
      *
-     * @param username
+     * @param username 用户名
      * @return
      */
     @GetMapping("/api/v1/users/{username}/authInfo")

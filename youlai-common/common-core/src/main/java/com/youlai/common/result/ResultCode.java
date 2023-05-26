@@ -16,6 +16,8 @@ public enum ResultCode implements IResultCode, Serializable {
     SUCCESS("00000", "一切ok"),
 
     USER_ERROR("A0001", "用户端错误"),
+
+    REPEAT_SUBMIT_ERROR("A0002", "您的请求已提交，请不要重复提交或等待片刻再尝试。"),
     USER_LOGIN_ERROR("A0200", "用户登录异常"),
 
     USER_NOT_EXIST("A0201", "用户不存在"),
@@ -25,7 +27,7 @@ public enum ResultCode implements IResultCode, Serializable {
     USERNAME_OR_PASSWORD_ERROR("A0210", "用户名或密码错误"),
     PASSWORD_ENTER_EXCEED_LIMIT("A0211", "用户输入密码次数超限"),
     CLIENT_AUTHENTICATION_FAILED("A0212", "客户端认证失败"),
-    TOKEN_INVALID_OR_EXPIRED("A0230", "token无效或已过期"),
+    INVALID_TOKEN("A0230", "token无效或已过期"),
     TOKEN_ACCESS_FORBIDDEN("A0231", "token已被禁止访问"),
 
     AUTHORIZED_ERROR("A0300", "访问权限异常"),

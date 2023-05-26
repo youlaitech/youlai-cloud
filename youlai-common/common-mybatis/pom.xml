@@ -18,6 +18,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.youlai</groupId>
+            <artifactId>common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.youlai</groupId>
+            <artifactId>common-security</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
         </dependency>
@@ -41,10 +52,7 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.youlai</groupId>
-            <artifactId>common-core</artifactId>
-        </dependency>
+
     </dependencies>
 
 </project>

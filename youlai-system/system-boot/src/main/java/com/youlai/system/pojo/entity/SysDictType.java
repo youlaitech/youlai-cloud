@@ -1,17 +1,16 @@
 package com.youlai.system.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.youlai.common.base.BaseEntity;
 import lombok.Data;
 
 /**
- * 字典类型表
- * @TableName sys_dict_type
+ * 字典类型实体
+ *
+ * @author haoxr
+ * @date 2022/12/17
  */
-@TableName(value ="sys_dict_type")
 @Data
 public class SysDictType extends BaseEntity {
     /**
@@ -39,8 +38,4 @@ public class SysDictType extends BaseEntity {
      * 备注
      */
     private String remark;
-
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

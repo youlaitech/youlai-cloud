@@ -13,17 +13,17 @@ spring:
       # 注册中心
       discovery:
         server-addr: http://localhost:8848
-        namespace: cloud-namespace-id
+        username: nacos
+        password: nacos
       # 配置中心
       config:
         server-addr: http://localhost:8848
-        namespace: cloud-namespace-id
         file-extension: yaml
         shared-configs[0]:
           data-id: youlai-common.yaml
-          namespace: cloud-namespace-id
           refresh: true
-
+        username: nacos
+        password: nacos
 logging:
   level:
     root: INFO

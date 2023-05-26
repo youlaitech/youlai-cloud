@@ -1,16 +1,31 @@
 package com.youlai.system.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 
+
+/**
+ * 用户和角色关联表
+ *
+ * @author haoxr
+ * @date 2022/12/17
+ */
 @Data
-@Accessors(chain = true)
 @AllArgsConstructor
+@NoArgsConstructor
 public class SysUserRole {
-
+    /**
+     * 用户ID
+     */
     private Long userId;
 
+    /**
+     * 角色ID
+     */
     private Long roleId;
 
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 }

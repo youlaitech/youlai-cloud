@@ -18,16 +18,17 @@ spring:
       # 注册中心
       discovery:
         server-addr: http://localhost:8848
-        namespace: cloud-namespace-id
+        username: nacos
+        password: nacos
       # 配置中心
       config:
         server-addr: http://localhost:8848
-        namespace: cloud-namespace-id
         file-extension: yaml
         shared-configs[0]:
           data-id: youlai-common.yaml
-          namespace: cloud-namespace-id
           refresh: true
+        username: nacos
+        password: nacos
   security:
     oauth2:
       resourceserver:
@@ -40,7 +41,6 @@ spring:
     store-type: redis
     # Spring Session Redis配置
     redis:
-      cleanup-cron: 0 * * * * *
       namespace: spring:session
       save-mode: on_set_attribute
       flush-mode: on_save

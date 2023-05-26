@@ -61,6 +61,13 @@ public interface SecurityConstants {
     List<String> FORBID_PATHS= Arrays.asList("/youlai-system/api/v1/menus","/mall-pms/api");
 
 
+    /**
+     * 用户权限集合缓存前缀
+     */
+    String USER_PERMS_CACHE_PREFIX = "AUTH:USER_PERMS:";
+
+
+
 
 
 }

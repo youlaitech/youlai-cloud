@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.youlai.system.mapper.SysMenuMapper">
 
-    <resultMap id="BaseResultMap" type="com.youlai.system.pojo.entity.SysMenu">
+    <!-- 菜单路由映射 -->
+    <resultMap id="RouteMap" type="com.youlai.system.pojo.bo.RouteBO">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
@@ -14,29 +15,56 @@
         <result property="icon" column="icon" jdbcType="VARCHAR"/>
         <result property="sort" column="sort" jdbcType="INTEGER"/>
         <result property="visible" column="visible" jdbcType="BOOLEAN"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="type" column="type" jdbcType="OTHER"/>
         <collection property="roles" ofType="string" javaType="list">
             <result column="code"/>
         </collection>
     </resultMap>
 
-    <select id="listRoutes" resultMap="BaseResultMap">
-        select t1.id,
-               t1.name,
-               t1.parent_id,
-               t1.path,
-               t1.component,
-               t1.icon,
-               t1.sort,
-               t1.visible,
-               t1.redirect_url,
-               t3.code,
-               t1.type
-        from sys_menu t1
-                 left join sys_role_menu t2 on t1.id = t2.menu_id
-                 left join sys_role t3 on t2.role_id = t3.id
-        order by t1.sort asc
+    <!-- 获取路由列表 -->
+    <select id="listRoutes" resultMap="RouteMap">
+        SELECT
+           t1.id,
+           t1.name,
+           t1.parent_id,
+           t1.path,
+           t1.component,
+           t1.icon,
+           t1.sort,
+           t1.visible,
+           t1.redirect_url,
+           t1.type,
+           t3.code
+        FROM
+            sys_menu t1
+                 LEFT JOIN sys_role_menu t2 ON t1.id = t2.menu_id
+                 LEFT JOIN sys_role t3 ON t2.role_id = t3.id
+        WHERE
+            t1.type != '${@com.youlai.common.enums.MenuTypeEnum@BUTTON.getValue()}'
+        ORDER BY t1.sort asc
+    </select>
+
+    <!-- 获取角色拥有的权限集合 -->
+    <select id="listRolePerms" resultType="java.lang.String">
+        SELECT
+            DISTINCT t1.perm
+        FROM
+            sys_menu t1
+                INNER JOIN sys_role_menu t2
+                INNER JOIN sys_role t3
+        WHERE
+            t1.type = '${@com.youlai.common.enums.MenuTypeEnum@BUTTON.getValue()}'
+          AND t1.perm IS NOT NULL
+          <choose>
+            <when test="roles!=null and roles.size()>0">
+                AND t3.CODE IN
+                <foreach collection="roles" item="role" separator="," open="(" close=")">
+                    #{role}
+                </foreach>
+            </when>
+            <otherwise>
+                AND t1.id = -1
+            </otherwise>
+          </choose>
     </select>
 </mapper>

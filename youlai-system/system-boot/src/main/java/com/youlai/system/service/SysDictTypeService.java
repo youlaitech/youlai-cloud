@@ -1,12 +1,12 @@
 package com.youlai.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.youlai.common.web.domain.Option;
-import com.youlai.system.pojo.entity.SysDictType;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.youlai.system.pojo.entity.SysDictType;
 import com.youlai.system.pojo.form.DictTypeForm;
 import com.youlai.system.pojo.query.DictTypePageQuery;
-import com.youlai.system.pojo.vo.dict.DictTypePageVO;
+import com.youlai.system.pojo.vo.DictTypePageVO;
+import com.youlai.system.pojo.vo.Option;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public interface SysDictTypeService extends IService<SysDictType> {
      * @param queryParams 分页查询对象
      * @return
      */
-    Page<DictTypePageVO> listDictTypePages(DictTypePageQuery queryParams);
+    Page<DictTypePageVO> getDictTypePage(DictTypePageQuery queryParams);
 
 
     /**
@@ -33,7 +33,7 @@ public interface SysDictTypeService extends IService<SysDictType> {
      * @param id 字典类型ID
      * @return
      */
-    DictTypeForm getDictTypeFormData(Long id);
+    DictTypeForm getDictTypeForm(Long id);
 
 
     /**

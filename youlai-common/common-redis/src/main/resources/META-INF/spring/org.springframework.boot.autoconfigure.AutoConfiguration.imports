@@ -1,3 +1,2 @@
-com.youlai.common.redis.config.RedisCacheConfiguration
-com.youlai.common.redis.config.RedisConfiguration
-com.youlai.common.redis.config.RedissonConfiguration
+com.youlai.common.redis.config.RedisCacheConfig
+com.youlai.common.redis.config.RedisConfig
